@@ -572,6 +572,27 @@ ssh -T git@github.com
 ```
 Should show your username.
 
+### "refusing to allow an OAuth App to create or update workflow" when pushing
+
+This error occurs when pushing workflow files (`.github/workflows/`) because your authentication token lacks the `workflow` scope. This typically happens if you're using HTTPS with GitHub CLI or a Personal Access Token.
+
+**Solution 1: Re-authenticate with GitHub CLI (recommended)**
+
+If you have `gh` installed:
+```bash
+gh auth login
+```
+
+Follow the prompts and make sure to grant the `workflow` scope when asked. Then try pushing again.
+
+**Solution 2: Use SSH instead of HTTPS**
+
+Switch your remote to SSH:
+```bash
+git remote set-url origin git@github.com:YOUR_USERNAME/hello-maven-ci.git
+git push
+```
+
 ### Tests pass locally but fail in CI
 
 - Check Java version matches (we use 17 everywhere)
