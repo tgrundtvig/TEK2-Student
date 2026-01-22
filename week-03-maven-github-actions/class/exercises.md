@@ -320,32 +320,41 @@ The workflow now:
 
 ---
 
-## Exercise 3: Push Docker Image to Docker Hub (~20 minutes)
+## Exercise 3: Push Docker Image to GitHub Container Registry (~15 minutes)
 
 ### Goal
 
-Automatically push Docker images to Docker Hub when tests pass.
+Automatically push Docker images to GitHub Container Registry (GHCR) when tests pass.
 
-### Part A: Create Docker Hub access token (~3 minutes)
+### Understanding Container Registries
 
-1. Go to [hub.docker.com](https://hub.docker.com) and sign in
-2. Click your username → **Account Settings**
-3. Click **Security** → **New Access Token**
-4. Description: "GitHub Actions"
-5. Access permissions: "Read, Write, Delete"
-6. Click **Generate**
-7. **Copy the token** - you won't see it again!
+A container registry stores Docker images so others can download and run them. Two popular options:
 
-### Part B: Add secrets to GitHub (~3 minutes)
+| Feature | GitHub Container Registry (GHCR) | Docker Hub |
+|---------|----------------------------------|------------|
+| Account | Uses your GitHub account | Separate account required |
+| Token setup | Automatic (`GITHUB_TOKEN`) | Manual token creation |
+| Registry URL | `ghcr.io` | `docker.io` |
+| Image location | Alongside your repository | Separate website |
+| Industry usage | Organization-internal images | Public/community images |
+
+**We'll use GHCR** because it's simpler to set up - no extra accounts or tokens needed!
+
+> **Industry note:** Docker Hub is widely used for public images (like `maven:3.9-eclipse-temurin-17`). The workflow concepts are identical - only the registry URL and authentication differ.
+
+### Part A: Enable workflow permissions (~2 minutes)
+
+GHCR uses the built-in `GITHUB_TOKEN` - no manual token creation needed!
 
 1. Go to your `hello-maven-ci` repository on GitHub
-2. Click **Settings** → **Secrets and variables** → **Actions**
-3. Click **New repository secret**
-4. Add two secrets:
-   - Name: `DOCKERHUB_USERNAME`, Value: your Docker Hub username
-   - Name: `DOCKERHUB_TOKEN`, Value: the token you just created
+2. Click **Settings** → **Actions** → **General**
+3. Scroll to "Workflow permissions"
+4. Select **"Read and write permissions"**
+5. Click **Save**
 
-### Part C: Update the workflow (~8 minutes)
+That's it! No tokens to create or secrets to manage.
+
+### Part B: Update the workflow (~8 minutes)
 
 Edit `.github/workflows/ci.yml`:
 
@@ -357,6 +366,11 @@ on:
     branches: [ main ]
   pull_request:
     branches: [ main ]
+
+# Required for pushing to GHCR
+permissions:
+  contents: read
+  packages: write
 
 jobs:
   build:
@@ -379,59 +393,72 @@ jobs:
     - name: Run tests
       run: mvn test
 
-    - name: Log in to Docker Hub
+    - name: Log in to GitHub Container Registry
       if: github.event_name == 'push' && github.ref == 'refs/heads/main'
       uses: docker/login-action@v3
       with:
-        username: ${{ secrets.DOCKERHUB_USERNAME }}
-        password: ${{ secrets.DOCKERHUB_TOKEN }}
+        registry: ghcr.io
+        username: ${{ github.actor }}
+        password: ${{ secrets.GITHUB_TOKEN }}
 
     - name: Build and push Docker image
       if: github.event_name == 'push' && github.ref == 'refs/heads/main'
       run: |
-        docker build -t ${{ secrets.DOCKERHUB_USERNAME }}/hello-maven:latest .
-        docker build -t ${{ secrets.DOCKERHUB_USERNAME }}/hello-maven:${{ github.sha }} .
-        docker push ${{ secrets.DOCKERHUB_USERNAME }}/hello-maven:latest
-        docker push ${{ secrets.DOCKERHUB_USERNAME }}/hello-maven:${{ github.sha }}
+        docker build -t ghcr.io/${{ github.repository_owner }}/hello-maven:latest .
+        docker build -t ghcr.io/${{ github.repository_owner }}/hello-maven:${{ github.sha }} .
+        docker push ghcr.io/${{ github.repository_owner }}/hello-maven:latest
+        docker push ghcr.io/${{ github.repository_owner }}/hello-maven:${{ github.sha }}
 ```
 
-**Key additions:**
-- `if: github.event_name == 'push' && github.ref == 'refs/heads/main'` - Only push images on push to main (not on PRs)
-- `docker/login-action@v3` - Official action to log in to Docker Hub
-- `${{ secrets.DOCKERHUB_USERNAME }}` - Reference to your secret
-- Two tags: `latest` and the commit SHA
+**Key parts explained:**
+- `permissions: packages: write` - Grants permission to push to GHCR
+- `registry: ghcr.io` - Specifies GitHub Container Registry
+- `${{ github.actor }}` - Your GitHub username (automatic)
+- `${{ secrets.GITHUB_TOKEN }}` - Built-in token (no setup needed!)
+- `${{ github.repository_owner }}` - Your GitHub username for the image path
+- `if:` condition - Only push images on push to main (not on PRs)
+- Two tags: `latest` and the commit SHA for traceability
 
-### Part D: Push and verify (~6 minutes)
+### Part C: Push and verify (~5 minutes)
 
 ```bash
 git add .
-git commit -m "Add Docker Hub push to CI"
+git commit -m "Add GHCR push to CI"
 git push
 ```
 
 Watch the workflow. After it completes:
 
-1. Go to [hub.docker.com](https://hub.docker.com)
-2. Find your `hello-maven` repository
-3. Check the Tags tab - you should see `latest` and a SHA tag
+1. Go to your repository on GitHub
+2. Look at the right sidebar - you'll see **"Packages"**
+3. Click on your `hello-maven` package
+4. Check the tags - you should see `latest` and a SHA tag
 
-### Part E: Test pulling your image
+**Alternative:** Go directly to `https://github.com/YOUR_USERNAME?tab=packages`
+
+### Part D: Test pulling your image
 
 Anyone can now run your application:
 
 ```bash
-docker pull YOUR_USERNAME/hello-maven:latest
-docker run --rm YOUR_USERNAME/hello-maven:latest
+docker pull ghcr.io/YOUR_USERNAME/hello-maven:latest
+docker run --rm ghcr.io/YOUR_USERNAME/hello-maven:latest
 ```
 
-Replace `YOUR_USERNAME` with your Docker Hub username.
+Replace `YOUR_USERNAME` with your GitHub username (lowercase).
+
+> **Note:** If your repository is private, you'll need to authenticate first:
+> ```bash
+> echo $GITHUB_TOKEN | docker login ghcr.io -u YOUR_USERNAME --password-stdin
+> ```
 
 ### Self-check
-- [ ] Docker Hub access token created
-- [ ] GitHub secrets configured
+- [ ] Workflow permissions set to "Read and write"
+- [ ] Workflow includes `permissions: packages: write`
 - [ ] Workflow pushes image on successful build
-- [ ] Image visible on Docker Hub
+- [ ] Image visible in GitHub Packages
 - [ ] You understand the `if:` condition for conditional steps
+- [ ] You understand the difference between GHCR and Docker Hub
 
 ---
 
@@ -469,12 +496,12 @@ A simple Java project demonstrating CI/CD with Maven and GitHub Actions.
 
 - Maven build with JUnit tests
 - Automatic builds on every push
-- Docker image automatically built and pushed to Docker Hub
+- Docker image automatically built and pushed to GitHub Container Registry
 
 ## Run Locally
 
 ```bash
-docker run --rm YOUR_USERNAME/hello-maven:latest
+docker run --rm ghcr.io/YOUR_USERNAME/hello-maven:latest
 ```
 
 ## Build Locally
@@ -557,6 +584,9 @@ jobs:
     needs: test
     runs-on: ubuntu-latest
     if: github.event_name == 'push' && github.ref == 'refs/heads/main'
+    permissions:
+      contents: read
+      packages: write
 
     steps:
     - name: Checkout code
@@ -572,16 +602,17 @@ jobs:
     - name: Build with Maven
       run: mvn clean package -DskipTests
 
-    - name: Log in to Docker Hub
+    - name: Log in to GitHub Container Registry
       uses: docker/login-action@v3
       with:
-        username: ${{ secrets.DOCKERHUB_USERNAME }}
-        password: ${{ secrets.DOCKERHUB_TOKEN }}
+        registry: ghcr.io
+        username: ${{ github.actor }}
+        password: ${{ secrets.GITHUB_TOKEN }}
 
     - name: Build and push Docker image
       run: |
-        docker build -t ${{ secrets.DOCKERHUB_USERNAME }}/hello-maven:latest .
-        docker push ${{ secrets.DOCKERHUB_USERNAME }}/hello-maven:latest
+        docker build -t ghcr.io/${{ github.repository_owner }}/hello-maven:latest .
+        docker push ghcr.io/${{ github.repository_owner }}/hello-maven:latest
 ```
 
 **Key concepts:**
@@ -628,9 +659,9 @@ Today you practiced:
 |-------|------------------|
 | **Dependency caching** | `cache: maven` speeds up builds |
 | **Multi-stage Docker builds** | Smaller images, build tools not in final image |
-| **CI secrets** | Secure storage for credentials |
+| **GITHUB_TOKEN** | Built-in authentication for GHCR |
 | **Conditional steps** | `if:` to control when steps run |
-| **Docker Hub integration** | Automatic image publishing |
+| **GHCR integration** | Automatic image publishing to GitHub Packages |
 | **Status badges** | Visual build status in README |
 | **Matrix testing** | Test against multiple versions |
 
@@ -652,7 +683,7 @@ Push code
 └─────────────────────────────────┘
     │
     ▼
-Docker Hub
+GitHub Container Registry (ghcr.io)
 (Image available for deployment)
 ```
 

@@ -258,18 +258,19 @@ jobs:
           echo "tag=staging" >> $GITHUB_OUTPUT
         fi
 
-    - name: Log in to Docker Hub
+    - name: Log in to GitHub Container Registry
       uses: docker/login-action@v3
       with:
-        username: ${{ secrets.DOCKERHUB_USERNAME }}
-        password: ${{ secrets.DOCKERHUB_TOKEN }}
+        registry: ghcr.io
+        username: ${{ github.actor }}
+        password: ${{ secrets.GITHUB_TOKEN }}
 
     - name: Build and push Docker image
       run: |
-        docker build -t ${{ secrets.DOCKERHUB_USERNAME }}/hello-maven:${{ steps.env.outputs.tag }} .
-        docker build -t ${{ secrets.DOCKERHUB_USERNAME }}/hello-maven:${{ github.sha }} .
-        docker push ${{ secrets.DOCKERHUB_USERNAME }}/hello-maven:${{ steps.env.outputs.tag }}
-        docker push ${{ secrets.DOCKERHUB_USERNAME }}/hello-maven:${{ github.sha }}
+        docker build -t ghcr.io/${{ github.repository_owner }}/hello-maven:${{ steps.env.outputs.tag }} .
+        docker build -t ghcr.io/${{ github.repository_owner }}/hello-maven:${{ github.sha }} .
+        docker push ghcr.io/${{ github.repository_owner }}/hello-maven:${{ steps.env.outputs.tag }}
+        docker push ghcr.io/${{ github.repository_owner }}/hello-maven:${{ github.sha }}
 
     - name: Summary
       run: |
@@ -278,6 +279,8 @@ jobs:
         echo "- **Image tag:** ${{ steps.env.outputs.tag }}" >> $GITHUB_STEP_SUMMARY
         echo "- **Commit:** ${{ github.sha }}" >> $GITHUB_STEP_SUMMARY
 ```
+
+> **Note:** Add `permissions: packages: write` at the workflow or job level for GHCR access.
 
 2. Test by pushing to different branches:
 
@@ -292,7 +295,7 @@ git add . && git commit -m "Test staging deploy"
 git push
 ```
 
-3. Check Docker Hub for different tags.
+3. Check GitHub Packages for different tags.
 
 ### Verify Success
 
@@ -431,11 +434,12 @@ jobs:
     - name: Set up Docker Buildx
       uses: docker/setup-buildx-action@v3
 
-    - name: Log in to Docker Hub
+    - name: Log in to GitHub Container Registry
       uses: docker/login-action@v3
       with:
-        username: ${{ secrets.DOCKERHUB_USERNAME }}
-        password: ${{ secrets.DOCKERHUB_TOKEN }}
+        registry: ghcr.io
+        username: ${{ github.actor }}
+        password: ${{ secrets.GITHUB_TOKEN }}
 
     - name: Build and push with cache
       uses: docker/build-push-action@v5
@@ -443,11 +447,13 @@ jobs:
         context: .
         push: true
         tags: |
-          ${{ secrets.DOCKERHUB_USERNAME }}/hello-maven:latest
-          ${{ secrets.DOCKERHUB_USERNAME }}/hello-maven:${{ github.sha }}
+          ghcr.io/${{ github.repository_owner }}/hello-maven:latest
+          ghcr.io/${{ github.repository_owner }}/hello-maven:${{ github.sha }}
         cache-from: type=gha
         cache-to: type=gha,mode=max
 ```
+
+> **Note:** Add `permissions: packages: write` at the workflow or job level for GHCR access.
 
 2. Push twice and compare build times:
 
@@ -469,7 +475,7 @@ git push
 - [ ] First build completes (populates cache)
 - [ ] Second build is faster (uses cache)
 - [ ] You see "importing cache manifest" in the second run
-- [ ] Images are pushed to Docker Hub
+- [ ] Images are pushed to GitHub Container Registry
 
 ### Challenge Extension
 
@@ -525,18 +531,19 @@ jobs:
       id: version
       run: echo "version=${GITHUB_REF#refs/tags/v}" >> $GITHUB_OUTPUT
 
-    - name: Log in to Docker Hub
+    - name: Log in to GitHub Container Registry
       uses: docker/login-action@v3
       with:
-        username: ${{ secrets.DOCKERHUB_USERNAME }}
-        password: ${{ secrets.DOCKERHUB_TOKEN }}
+        registry: ghcr.io
+        username: ${{ github.actor }}
+        password: ${{ secrets.GITHUB_TOKEN }}
 
     - name: Build and push release image
       run: |
-        docker build -t ${{ secrets.DOCKERHUB_USERNAME }}/hello-maven:${{ steps.version.outputs.version }} .
-        docker build -t ${{ secrets.DOCKERHUB_USERNAME }}/hello-maven:latest .
-        docker push ${{ secrets.DOCKERHUB_USERNAME }}/hello-maven:${{ steps.version.outputs.version }}
-        docker push ${{ secrets.DOCKERHUB_USERNAME }}/hello-maven:latest
+        docker build -t ghcr.io/${{ github.repository_owner }}/hello-maven:${{ steps.version.outputs.version }} .
+        docker build -t ghcr.io/${{ github.repository_owner }}/hello-maven:latest .
+        docker push ghcr.io/${{ github.repository_owner }}/hello-maven:${{ steps.version.outputs.version }}
+        docker push ghcr.io/${{ github.repository_owner }}/hello-maven:latest
 
     - name: Create GitHub Release
       uses: softprops/action-gh-release@v1
@@ -545,7 +552,7 @@ jobs:
         body: |
           ## Docker Image
           ```
-          docker pull ${{ secrets.DOCKERHUB_USERNAME }}/hello-maven:${{ steps.version.outputs.version }}
+          docker pull ghcr.io/${{ github.repository_owner }}/hello-maven:${{ steps.version.outputs.version }}
           ```
 
           ## Changes
@@ -553,6 +560,8 @@ jobs:
         draft: false
         prerelease: false
 ```
+
+> **Note:** Add `permissions: packages: write` at the workflow or job level for GHCR access.
 
 2. Create a release:
 

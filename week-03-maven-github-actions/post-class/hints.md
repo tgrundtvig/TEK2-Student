@@ -530,13 +530,16 @@ Never print secrets in logs!
 </details>
 
 <details>
-<summary>Docker Hub rate limits</summary>
+<summary>GHCR authentication issues</summary>
 
-Free Docker Hub accounts have pull rate limits. If you see rate limit errors:
+If you have trouble pushing to GitHub Container Registry:
 
-1. Always use `docker/login-action` before pulling/pushing
-2. Consider using GitHub Container Registry (ghcr.io) instead
-3. Don't pull images unnecessarily in loops
+1. Check your workflow has `permissions: packages: write`
+2. Verify repository Settings → Actions → Workflow permissions is "Read and write"
+3. Ensure image names are lowercase (GHCR requires lowercase)
+4. Check `registry: ghcr.io` is specified in login action
+
+**Note:** If using Docker Hub instead, you'll need to create secrets for `DOCKERHUB_USERNAME` and `DOCKERHUB_TOKEN`.
 
 </details>
 
