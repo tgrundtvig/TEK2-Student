@@ -40,9 +40,12 @@ From Weeks 1-2, you should have:
 
 | Resource | Description | Time |
 |----------|-------------|------|
+| [Quick Reference](quick-reference.md) | Commands and templates cheat sheet | Reference |
 | [Pre-class Reading](pre-class/reading.md) | CI/CD concepts, Maven basics, GitHub Actions | 45-60 min |
 | [Pre-class Exercises](pre-class/exercises.md) | Build Java project, set up CI | 30-60 min |
-| [Quick Reference](quick-reference.md) | Commands and templates cheat sheet | Reference |
+| [Class Exercises](class/exercises.md) | Maven caching, Docker builds, Docker Hub push | 3.5 hours |
+| [Post-class Tasks](post-class/advanced-tasks.md) | Code quality, environments, releases | 1-2 hours |
+| [Post-class Hints](post-class/hints.md) | Troubleshooting and detailed hints | Reference |
 
 ---
 
