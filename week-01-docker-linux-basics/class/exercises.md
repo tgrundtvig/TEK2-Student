@@ -363,7 +363,7 @@ Practice running various Docker images and understand image differences.
 
 3. Run a one-liner (no need to enter the container):
    ```bash
-   docker run --rm python:3.11 python -c "print('Hello from Python in Docker!')"
+   docker run --rm python:3.11 python -c 'print("Hello from Python in Docker!")'
    ```
 
    Note the `--rm` flag - it automatically removes the container when done.
