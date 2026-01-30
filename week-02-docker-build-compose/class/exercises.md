@@ -173,7 +173,9 @@ docker volume inspect mysql-data
 - [ ] I understand `-v mysql-data:/var/lib/mysql` connects the volume
 - [ ] I know volumes persist until explicitly deleted with `docker volume rm`
 
-### Keep mysql-persistent running - we might use it later!
+### Note on mysql-persistent
+
+You can keep `mysql-persistent` running or stop it - we won't use it in the remaining exercises. The volume `mysql-data` will persist either way.
 
 ---
 
@@ -329,6 +331,14 @@ You should see the labels you added in the Dockerfile.
 Define and run a multi-container application with Docker Compose.
 
 ### Part A: Setup (~2 minutes)
+
+First, stop the `my-nginx` container from Exercise 2 (it's using port 8080 which we need):
+
+```bash
+docker rm -f my-nginx
+```
+
+Now create the project directory:
 
 ```bash
 mkdir -p ~/week2-docker/compose-demo && cd ~/week2-docker/compose-demo
