@@ -19,7 +19,7 @@ Your laptop
 
 **In production** (what you'll do this week):
 ```
-Cloud Provider (Azure/DigitalOcean/Hetzner)
+Cloud Provider (Azure/DigitalOcean/Hetzner/Google Cloud/Oracle Cloud)
     └── Virtual Machine (Linux server)
         └── Docker
             └── Your container
@@ -92,7 +92,7 @@ Cloud computing offers different levels of abstraction. The "as a Service" model
 │   ┌─────────────────────────────────────────────────────────────┐  │
 │   │                         IaaS                                 │  │
 │   │           Infrastructure as a Service                        │  │
-│   │      Azure VMs, Digital Ocean, Hetzner, AWS EC2              │  │
+│   │  Azure VMs, Digital Ocean, Hetzner, Google Cloud, Oracle Cloud│  │
 │   │      You get VMs; provider handles physical hardware         │  │
 │   └─────────────────────────────────────────────────────────────┘  │
 │                              │                                      │
@@ -112,7 +112,7 @@ Cloud computing offers different levels of abstraction. The "as a Service" model
 | Model | You Manage | Provider Manages | Examples |
 |-------|------------|------------------|----------|
 | **On-Premises** | Everything | Nothing | Your own server room |
-| **IaaS** | OS, runtime, apps, data | Hardware, network, VMs | Azure VMs, EC2, Hetzner |
+| **IaaS** | OS, runtime, apps, data | Hardware, network, VMs | Azure VMs, EC2, Hetzner, Google Cloud, Oracle Cloud |
 | **PaaS** | Apps and data | Everything else | Heroku, Railway, Coolify |
 | **SaaS** | Just your data | Everything | Gmail, Slack, GitHub |
 
@@ -128,7 +128,7 @@ Cloud computing offers different levels of abstraction. The "as a Service" model
 - Monitoring and backups
 - Scaling (adding more servers)
 
-**Examples:** Azure Virtual Machines, Digital Ocean Droplets, Hetzner Cloud, AWS EC2
+**Examples:** Azure Virtual Machines, Digital Ocean Droplets, Hetzner Cloud, Google Cloud Compute Engine, Oracle Cloud Compute, AWS EC2
 
 **Pros:**
 - Full control over the environment
@@ -405,6 +405,22 @@ sudo ufw enable
 - **Good for:** European servers, best price/performance
 - **Interface:** Straightforward
 - **Note:** Servers in Germany and Finland
+
+### Google Cloud (GCP)
+
+- **Free tier:** $300 credit for 90 days, plus Always Free e2-micro VM
+- **Good for:** Enterprise environments, AI/ML services
+- **Interface:** Feature-rich Google Cloud Console
+- **Student benefit:** Education credits available through participating institutions
+- **Note:** Always Free VM limited to US regions only
+
+### Oracle Cloud (OCI)
+
+- **Free tier:** $300 credit for 30 days, plus **very generous Always Free** instances
+- **Good for:** Best permanent free tier (up to 4 ARM CPUs + 24 GB RAM — forever free)
+- **Interface:** Clean Oracle Cloud Console
+- **Student benefit:** Oracle Academy members get $300 credits for 1 year, no credit card required
+- **Note:** ARM instances may have limited availability; choose Home Region carefully (permanent)
 
 ### Coolify (Self-Hosted PaaS)
 

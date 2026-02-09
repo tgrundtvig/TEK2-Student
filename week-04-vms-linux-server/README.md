@@ -61,6 +61,8 @@ Choose **one** provider and follow its tutorial:
 | [Azure](tutorials/azure.md) | Microsoft Azure Virtual Machines |
 | [Digital Ocean](tutorials/digitalocean.md) | Digital Ocean Droplets |
 | [Hetzner](tutorials/hetzner.md) | Hetzner Cloud Servers |
+| [Google Cloud](tutorials/google-cloud.md) | Google Cloud Compute Engine |
+| [Oracle Cloud](tutorials/oracle-cloud.md) | Oracle Cloud Infrastructure |
 | [Coolify](tutorials/coolify.md) | Self-hosted PaaS (backup option) |
 
 ---
@@ -119,12 +121,16 @@ You'll need a cloud server for this week. Here are your options:
 | **Azure** | Free credits available | Enterprise standard, good docs | Complex interface |
 | **Digital Ocean** | ~$6/month | Simple, great tutorials | No free tier |
 | **Hetzner** | ~$4/month | Cheapest, European servers | Less documentation |
+| **Google Cloud** | Always Free VM available | Enterprise standard, browser SSH | Free VM limited to US regions |
+| **Oracle Cloud** | Always Free (generous) | Best free tier (4 CPU, 24 GB RAM forever) | ARM architecture, capacity limits |
 | **Coolify** | Free (provided) | Simplest, no billing | Less Linux experience |
 
 **Recommendation:**
 - If you have student credits or want enterprise experience → **Azure**
 - If you want simplicity and great docs → **Digital Ocean**
 - If you want the cheapest option → **Hetzner**
+- If you want a powerful free-forever server → **Oracle Cloud**
+- If you want a free VM and don't mind US regions → **Google Cloud**
 - If you have billing issues or want a simpler path → **Coolify** (ask instructor)
 
 ---

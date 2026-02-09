@@ -70,6 +70,8 @@ Select **one** provider based on your situation:
 | Have Azure student credits | Azure | [tutorials/azure.md](../tutorials/azure.md) |
 | Want simplicity with good docs | Digital Ocean | [tutorials/digitalocean.md](../tutorials/digitalocean.md) |
 | Want the cheapest option | Hetzner | [tutorials/hetzner.md](../tutorials/hetzner.md) |
+| Want a powerful free-forever server | Oracle Cloud | [tutorials/oracle-cloud.md](../tutorials/oracle-cloud.md) |
+| Want a free VM (US regions only) | Google Cloud | [tutorials/google-cloud.md](../tutorials/google-cloud.md) |
 | Have billing issues or want simpler path | Coolify | [tutorials/coolify.md](../tutorials/coolify.md) |
 
 ### Provider Comparison
@@ -88,6 +90,18 @@ Select **one** provider based on your situation:
 - Pros: Cheapest, good performance
 - Cons: European servers only, less documentation
 - Cost: ~€4/month
+
+**Google Cloud:**
+- Pros: Always Free e2-micro VM, $300 trial credits, browser-based SSH
+- Cons: Free VM limited to US regions (higher latency from Europe)
+- Cost: Free (e2-micro in US) or $300 trial credits for other regions
+- Student benefit: Education credits through participating institutions
+
+**Oracle Cloud:**
+- Pros: Best free tier of any provider — up to 4 ARM CPUs + 24 GB RAM, forever free
+- Cons: ARM architecture (most Docker images support it), capacity limits on ARM instances
+- Cost: Free (Always Free tier never expires)
+- Student benefit: Oracle Academy members get $300 credits, no credit card required
 
 **Coolify (backup option):**
 - Pros: Free, simple web interface
@@ -108,6 +122,8 @@ Follow your chosen provider's tutorial:
 - [Azure Tutorial](../tutorials/azure.md)
 - [Digital Ocean Tutorial](../tutorials/digitalocean.md)
 - [Hetzner Tutorial](../tutorials/hetzner.md)
+- [Google Cloud Tutorial](../tutorials/google-cloud.md)
+- [Oracle Cloud Tutorial](../tutorials/oracle-cloud.md)
 - [Coolify Tutorial](../tutorials/coolify.md)
 
 ### Server Specifications
