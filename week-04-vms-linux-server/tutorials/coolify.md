@@ -1,6 +1,6 @@
 # Coolify Deployment Tutorial
 
-This tutorial walks you through deploying your application using Coolify, a self-hosted PaaS platform.
+This tutorial walks you through deploying your application using Coolify, a self-hosted PaaS platform running on the instructor's server.
 
 **Estimated time: 20-30 minutes**
 
@@ -35,171 +35,148 @@ Coolify is an open-source alternative to platforms like Heroku, Vercel, or Netli
 
 ---
 
+## Our Setup
+
+The instructor runs a Coolify instance with the following configuration:
+
+- **Base domain:** `apps.tobiasgrundtvig.dk`
+- **Your app URL will be:** `https://<your-app-name>.apps.tobiasgrundtvig.dk`
+- **HTTPS:** Automatic — all HTTP traffic is redirected to HTTPS
+- **Wildcard DNS:** Already configured, so any subdomain works immediately
+
+For example, if you deploy an app called `hello-maven`, it will be available at:
+
+```
+https://hello-maven.apps.tobiasgrundtvig.dk
+```
+
+---
+
 ## Prerequisites
 
-- Instructor-provided Coolify access (URL and login)
+- An invitation link from your instructor (one per student)
 - GitHub repository with your application
 - GitHub account
 
 ---
 
-## Step 1: Request Coolify Access
+## Step 1: Create Your Account
 
-Contact your instructor to get:
+Your instructor will give you a personal invitation link. This link connects you to your group's team in Coolify.
 
-1. Coolify URL (e.g., `https://coolify.tek2.example.com`)
-2. Login credentials or invitation
+1. Open the invitation link in your browser
+2. Create a password and complete registration
+3. You're now logged in and part of your group's team
 
-**Note:** Coolify access is provided on request for students who need it.
+After this, you can always log in at:
 
----
+```
+https://coolify.apps.tobiasgrundtvig.dk
+```
 
-## Step 2: Log In to Coolify
-
-1. Go to the Coolify URL provided by your instructor
-2. Click "Login" or "Sign Up" (depending on setup)
-3. Enter your credentials
-
----
-
-## Step 3: Connect GitHub
-
-### Add GitHub Integration
-
-1. In Coolify, go to "Sources" (or "Git Sources")
-2. Click "Add New Source" → "GitHub App"
-3. Follow the OAuth flow to authorize Coolify
-4. Grant access to your repositories
-
-### Alternative: Manual Repository
-
-If GitHub integration isn't available:
-
-1. Go to your project
-2. Click "New Resource" → "Public Repository"
-3. Enter your repository URL manually
+> **Note:** Each group has its own team. You can only see and manage your own group's deployments — you can't accidentally break another group's work.
 
 ---
 
-## Step 4: Create a New Project
+## Step 2: Create a New Project
 
-1. Click "Projects" in the sidebar
-2. Click "New Project"
-3. Name: `tek2-deployment`
-4. Click "Create"
+1. Click **"Projects"** in the sidebar
+2. Click **"+ Add"**
+3. Name your project (e.g., `tek2-group1` or your group name)
+4. Click **"Continue"**
 
 ---
 
-## Step 5: Deploy Your Application
+## Step 3: Deploy Your Application
 
 ### Option A: Deploy from Docker Image (Recommended)
 
 If you have a Docker image in GHCR from Week 3:
 
-1. In your project, click "New Resource"
-2. Select "Docker Image"
+1. Inside your project, click **"+ New"** → **"Docker Image"**
+2. Select the **localhost** server
 3. Configure:
    - **Image**: `ghcr.io/YOUR_USERNAME/hello-maven:latest`
    - **Port**: 8080 (or your app's port)
-4. If GHCR is private, add credentials:
+4. If your GHCR image is private, add registry credentials:
    - Registry URL: `ghcr.io`
    - Username: Your GitHub username
    - Password: Your Personal Access Token (with `read:packages` scope)
-5. Click "Deploy"
+5. Under **"Domains"**, set your app URL:
+   ```
+   https://YOUR-APP-NAME.apps.tobiasgrundtvig.dk
+   ```
+   Replace `YOUR-APP-NAME` with something unique (e.g., `hello-maven-anna`)
+6. Click **"Deploy"**
 
-### Option B: Deploy from GitHub Repository
+### Option B: Deploy from Public Git Repository
 
 If deploying directly from source:
 
-1. In your project, click "New Resource"
-2. Select your GitHub source
-3. Choose your repository
+1. Inside your project, click **"+ New"** → **"Public Repository"**
+2. Select the **localhost** server
+3. Enter your GitHub repository URL (e.g., `https://github.com/YOUR_USERNAME/hello-maven`)
 4. Configure build:
-   - For Dockerfile: Select "Dockerfile" build type
-   - For buildpacks: Let Coolify auto-detect
-5. Set the exposed port
-6. Click "Deploy"
+   - If your repo has a Dockerfile, Coolify detects it automatically
+   - Set the exposed port (e.g., 8080)
+5. Under **"Domains"**, set:
+   ```
+   https://YOUR-APP-NAME.apps.tobiasgrundtvig.dk
+   ```
+6. Click **"Deploy"**
 
 ---
 
-## Step 6: Configure Environment Variables
+## Step 4: Access Your Application
+
+After deployment completes (watch the build logs):
+
+1. The status should show **"Running"**
+2. Click the URL shown in your deployment dashboard
+3. Your application should be live at `https://YOUR-APP-NAME.apps.tobiasgrundtvig.dk`
+
+> **Important:** Choose a unique app name! If two groups pick the same subdomain, only one will work. A good pattern is `<app>-<group-name>`, e.g., `hello-maven-group1`.
+
+---
+
+## Step 5: Configure Environment Variables (If Needed)
 
 If your application needs environment variables:
 
-1. Go to your deployment
-2. Click "Environment Variables"
-3. Add variables:
-   - Key: `DATABASE_URL`
-   - Value: `your-value`
-   - Check "Build" if needed during build
-   - Check "Preview" for preview deployments
+1. Go to your resource and click **"Environment Variables"**
+2. Add variables as key-value pairs
+3. Check **"Build"** if the variable is needed during build
 4. Save and redeploy
 
 ---
 
-## Step 7: Access Your Application
+## Step 6: Set Up Automatic Deployments
 
-After deployment completes:
+### Using Webhooks (Git Repository deployments)
 
-1. Coolify assigns a domain automatically (or uses custom domain)
-2. Find the URL in your deployment dashboard
-3. Click the URL to open your application
+If you deployed from a Git repository:
 
-Example URL: `https://hello-maven-abc123.coolify.example.com`
+1. Go to your resource settings
+2. Find **"Webhooks"** section
+3. Enable **"Deploy on push"**
+4. Now pushing to your `main` branch triggers a redeployment
 
----
+### Manual Redeployment
 
-## Step 8: Set Up Automatic Deployments
+To deploy manually at any time:
 
-### Enable Auto-Deploy from GitHub
-
-1. Go to your deployment settings
-2. Find "Automatic Deployments" or "Webhooks"
-3. Enable "Deploy on push"
-4. Select which branch triggers deployment (usually `main`)
-
-Now, pushing to GitHub automatically deploys your new version!
-
-### Manual Deployment
-
-To deploy manually:
-
-1. Go to your deployment
-2. Click "Redeploy" or "Deploy"
+1. Go to your resource
+2. Click **"Redeploy"**
 
 ---
 
 ## Viewing Logs
 
-1. Go to your deployment
-2. Click "Logs" or "Application Logs"
-3. View real-time logs from your application
+1. Go to your resource
+2. Click **"Logs"** to see live application output
+3. For build logs, click on a deployment in the history
 
-For build logs:
-1. Click on a deployment in history
-2. View "Build Logs"
-
----
-
-## Monitoring
-
-Coolify provides basic monitoring:
-
-1. Go to your deployment
-2. Click "Monitoring" or "Metrics"
-3. View CPU, memory, and network usage
-
----
-
-## Custom Domain (Optional)
-
-If you have a custom domain:
-
-1. Go to your deployment settings
-2. Find "Domains" section
-3. Add your domain: `myapp.example.com`
-4. Create DNS record pointing to Coolify's server
-5. Coolify automatically provisions SSL certificate
+This is useful for debugging if your app doesn't start correctly.
 
 ---
 
@@ -211,6 +188,7 @@ If you have a custom domain:
 | Firewall config | You do it | Automatic |
 | Docker install | You do it | Pre-installed |
 | HTTPS setup | You do it (Certbot) | Automatic |
+| DNS config | You do it | Wildcard already set up |
 | Deployment | CI/CD with SSH | Push to Git or click Deploy |
 | Server updates | You do it | Platform managed |
 | Cost | Pay for VM | Provided by instructor |
@@ -222,30 +200,24 @@ If you have a custom domain:
 
 ### Build Fails
 
-1. Check build logs for error messages
+1. Check build logs — click on the failed deployment to see details
 2. Common issues:
-   - Missing Dockerfile
-   - Wrong port configuration
-   - Missing dependencies
+   - Missing Dockerfile in repository root
+   - Wrong port configuration (must match what your app listens on)
+   - Missing dependencies in Dockerfile
 
 ### Application Not Accessible
 
-1. Check deployment status is "Running"
-2. Verify port configuration matches your app
-3. Check application logs for errors
+1. Check deployment status is **"Running"**
+2. Verify the domain is set to `https://YOUR-APP-NAME.apps.tobiasgrundtvig.dk`
+3. Verify the port matches what your application listens on
+4. Check application logs for startup errors
 
-### GitHub Connection Issues
+### Image Pull Fails (GHCR)
 
-1. Re-authorize the GitHub App
-2. Check repository permissions
-3. Try manual repository URL
-
-### Image Pull Fails
-
-For private GHCR images:
-1. Verify credentials are correct
-2. Check PAT has `read:packages` scope
-3. Verify image name and tag
+1. Verify your PAT has the `read:packages` scope
+2. Check the image name and tag are correct
+3. Make sure the image exists: `docker pull ghcr.io/YOUR_USERNAME/hello-maven:latest`
 
 ---
 
@@ -257,15 +229,15 @@ If using Coolify instead of a VM, adapt the class exercises:
 - **Skip**: Coolify handles this automatically
 
 ### Exercise 3: Install Docker
-- **Skip**: Docker is pre-installed
+- **Skip**: Docker is pre-installed on the server
 
 ### Exercise 4: Deploy Application
-- **Replace with**: Deploy via Coolify web interface (Step 5 above)
+- **Replace with**: Deploy via Coolify web interface (Step 3 above)
 
 ### Exercise 5: Automatic Deployment
-- **Replace with**: Configure auto-deploy in Coolify (Step 8 above)
-- No need for SSH keys or deployment workflow
-- Coolify handles the CI/CD
+- **Replace with**: Configure webhooks in Coolify (Step 6 above)
+- No need for SSH keys or GitHub Actions deployment workflow
+- Coolify handles the CI/CD pipeline
 
 ---
 
@@ -273,10 +245,10 @@ If using Coolify instead of a VM, adapt the class exercises:
 
 Be aware of Coolify limitations compared to VMs:
 
-1. **No SSH access**: Can't log into the server directly
-2. **Less control**: Platform makes some decisions for you
-3. **Dependency on platform**: If Coolify is down, can't deploy
-4. **Less learning**: Fewer Linux administration skills gained
+1. **No SSH access** — you can't log into the server directly
+2. **Less control** — the platform makes infrastructure decisions for you
+3. **Shared server** — your group shares the server with other groups (but each group's deployments are isolated)
+4. **Less learning** — fewer Linux administration skills gained
 
 ---
 
@@ -284,24 +256,9 @@ Be aware of Coolify limitations compared to VMs:
 
 Consider switching to a VM if you:
 
-- Want to learn Linux server administration
+- Want to learn Linux server administration (recommended!)
 - Need SSH access for debugging
 - Want full control over the environment
 - Are preparing for DevOps/SRE roles
 
-The VM approach is more valuable for learning, but Coolify is a valid option to get your application deployed.
-
----
-
-## Next Steps
-
-After deploying with Coolify:
-
-1. Verify your application is accessible
-2. Test automatic deployments by pushing a change
-3. Explore Coolify's monitoring and logging features
-
-For post-class tasks:
-- **Custom domain**: Configure in Coolify (HTTPS is automatic)
-- **Monitoring**: Already built into Coolify
-- **Multi-container**: Use Coolify's Docker Compose support
+The VM approach is more valuable for learning, but Coolify is a valid option to get your application deployed quickly.
