@@ -74,7 +74,7 @@ Your instructor will give you a personal invitation link. This link connects you
 After this, you can always log in at:
 
 ```
-https://coolify.apps.tobiasgrundtvig.dk
+https://coolify.tobiasgrundtvig.dk
 ```
 
 > **Note:** Each group has its own team. You can only see and manage your own group's deployments — you can't accidentally break another group's work.
@@ -233,7 +233,7 @@ You can trigger Coolify to redeploy automatically from your GitHub Actions pipel
 - Look for the **"Webhooks"** section
 - Copy the deploy webhook URL — it looks something like:
   ```
-  https://coolify.apps.tobiasgrundtvig.dk/api/v1/deploy?uuid=YOUR_UUID&force=true
+  https://coolify.tobiasgrundtvig.dk/api/v1/deploy?uuid=YOUR_UUID&force=true
   ```
 - Make sure the URL ends with `&force=true` (change `false` to `true` if needed) — this ensures Coolify actually restarts the containers
 
