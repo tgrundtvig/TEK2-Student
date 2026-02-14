@@ -16,6 +16,17 @@ TEK2 teaches modern software development practices with a focus on:
 |------|-------|--------|
 | 1 | Docker + Linux Basics | [week-01-docker-linux-basics/](week-01-docker-linux-basics/) |
 | 2 | Docker Build & Compose | [week-02-docker-build-compose/](week-02-docker-build-compose/) |
+| 3 | Maven + GitHub Actions | [week-03-maven-github-actions/](week-03-maven-github-actions/) |
+| 4 | Cloud + Linux Server | [week-04-vms-linux-server/](week-04-vms-linux-server/) |
+| 5 | Networking Basics | [week-05-networking-basics/](week-05-networking-basics/) |
+| 6-7 | Project Week | [week-06-project/](week-06-project/) |
+| 8 | HTTP/HTTPS | [week-08-http-https/](week-08-http-https/) |
+| 9 | DNS & Certificates | [week-09-dns-certificates/](week-09-dns-certificates/) |
+| 10 | Encryption + Security | [week-10-encryption-security/](week-10-encryption-security/) |
+| 11 | OSI Model, IPv6 & VPN | [week-11-osi-ipv6-vpn/](week-11-osi-ipv6-vpn/) |
+| 12 | AI Project | [week-12-ai-project/](week-12-ai-project/) |
+| 13 | Exam Preparation | [week-13-exam-preparation/](week-13-exam-preparation/) |
+| 14-16 | Group Project | [week-14-group-project/](week-14-group-project/) |
 
 ## Getting Started
 
