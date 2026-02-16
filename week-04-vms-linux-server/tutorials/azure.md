@@ -57,7 +57,17 @@ This tutorial walks you through creating a Virtual Machine on Microsoft Azure.
 | Setting | Value |
 |---------|-------|
 | Virtual machine name | `tek2-server` (or your choice) |
-| Region | Choose closest to you (e.g., "North Europe" for Denmark) |
+| Region | Choose a region where your student credit works (see below) |
+
+> **How to find your allowed regions:**
+> 1. In the Azure Portal search bar, search for **"Policies"**
+> 2. Click **"Compliance"**
+> 3. Find **"Allowed resources deployment regions"**
+> 4. Click **"Edit assignment"**
+> 5. Click **"Parameters"**
+> 6. You'll see **"Allowed regions"** — these are the regions you can use
+>
+> **Warning:** Do NOT change anything here — just look! Changing these settings will break your student credit.
 | Availability options | No infrastructure redundancy required |
 | Security type | Standard |
 | Image | Ubuntu Server 22.04 LTS - x64 Gen2 |
