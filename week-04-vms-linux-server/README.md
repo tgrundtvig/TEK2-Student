@@ -65,6 +65,12 @@ Choose **one** provider and follow its tutorial:
 | [Oracle Cloud](tutorials/oracle-cloud.md) | Oracle Cloud Infrastructure |
 | [Coolify](tutorials/coolify.md) | Self-hosted PaaS (backup option) |
 
+### Full-Stack Project Tutorial
+
+| Tutorial | Description |
+|----------|-------------|
+| [Todo App on Azure](tutorials/todo-app-azure.md) | Fork and deploy a 3-service app (Nginx + Spring Boot + PostgreSQL) with CI/CD |
+
 ---
 
 ## Time Investment
