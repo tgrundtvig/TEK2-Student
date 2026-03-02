@@ -10,25 +10,26 @@ By the end, every push to `main` will automatically build, test, and deploy your
 
 ## What You'll Build
 
-A fully automated pipeline that deploys your project — a Java/Spring Boot backend, an HTML/CSS/JS frontend, and a PostgreSQL database — to your Azure VM.
+A fully automated pipeline that deploys your project — a Java/Spring Boot application (serving both the backend API and the HTML/CSS/JS frontend) with a MySQL database — to your Azure VM.
 
 ```
 ┌─────────────────────────────────────────────────┐
 │  Your Azure VM                                   │
 │                                                   │
-│  ┌───────────┐   ┌───────────┐   ┌───────────┐  │
-│  │ frontend  │──▶│    app    │──▶│    db      │  │
-│  │  (nginx)  │   │ (Spring)  │   │(PostgreSQL)│  │
-│  │  port 80  │   │ port 8080 │   │ port 5432  │  │
-│  └───────────┘   └───────────┘   └───────────┘  │
-│       ▲                                           │
-│       │ port 80                                   │
-└───────┼───────────────────────────────────────────┘
-        │
-    Internet
+│  ┌───────────────────┐        ┌───────────┐      │
+│  │       app         │───────▶│    db      │      │
+│  │    (Spring Boot)  │        │  (MySQL)   │      │
+│  │   serves HTML +   │        │ port 3306  │      │
+│  │   API on port 80  │        └───────────┘      │
+│  └───────────────────┘                            │
+│          ▲                                        │
+│          │ port 80                                 │
+└──────────┼────────────────────────────────────────┘
+           │
+       Internet
 ```
 
-Only the frontend is exposed to the internet. It forwards `/api/` requests to the backend internally using Nginx as a reverse proxy.
+Spring Boot serves everything: your static files (HTML, CSS, JS) and your API endpoints. Only the app container is exposed to the internet.
 
 ---
 
@@ -38,35 +39,37 @@ Before starting, you should have:
 
 - [ ] A GitHub repository containing your project code
 - [ ] A Java/Spring Boot backend (with a `pom.xml`)
-- [ ] An HTML/CSS/JS frontend
+- [ ] An HTML/CSS/JS frontend (in `src/main/resources/static/`)
 - [ ] An Azure VM with SSH access and Docker installed — if you don't have one yet, see [Appendix A](#appendix-a-azure-vm-setup) at the bottom of this tutorial
 
 ---
 
 ## Project Structure
 
-This tutorial assumes your project is organized like this (the same pattern as the todo-app):
+This tutorial assumes your project is organized like this (the standard Spring Boot layout):
 
 ```
 your-project/
-├── pom.xml                    ← Spring Boot backend at root
+├── pom.xml                    ← Spring Boot project at root
 ├── src/
 │   └── main/
 │       ├── java/...           ← Your Java code
 │       └── resources/
-│           └── application.properties
-├── frontend/
-│   ├── index.html             ← Your HTML/CSS/JS frontend
-│   ├── style.css
-│   └── script.js
+│           ├── application.properties
+│           └── static/
+│               ├── index.html ← Your HTML/CSS/JS frontend
+│               ├── style.css
+│               └── script.js
 └── README.md
 ```
 
-> **Different structure?** If your backend is in a `backend/` subfolder instead of the root, you'll need to adjust some paths. The tutorial will note where.
+Spring Boot automatically serves files from `src/main/resources/static/` at the root URL. So `static/index.html` becomes available at `http://localhost:8080/`.
+
+> **Frontend in a different folder?** If your HTML files are currently in a separate `frontend/` folder, move them into `src/main/resources/static/`. Spring Boot won't serve them otherwise.
 
 ---
 
-## Step 1: Dockerize Your Backend (~15 minutes)
+## Step 1: Dockerize Your Application (~15 minutes)
 
 Your Spring Boot application needs a `Dockerfile` that builds the Java code and creates a runnable container image.
 
@@ -87,22 +90,36 @@ Before creating the Dockerfile, make sure your `pom.xml` includes the Spring Boo
 
 If it's missing, add it. Without this plugin, Maven creates a regular JAR that can't be run on its own.
 
-### 1.2: Configure database connection
+### 1.2: Check your MySQL dependency
 
-Your `src/main/resources/application.properties` needs to be configured so Spring Boot can connect to the PostgreSQL database. Add or update these lines:
+Your `pom.xml` also needs the MySQL connector so Spring Boot can talk to the database. Check that you have this in the `<dependencies>` section:
+
+```xml
+<dependency>
+    <groupId>com.mysql</groupId>
+    <artifactId>mysql-connector-j</artifactId>
+    <scope>runtime</scope>
+</dependency>
+```
+
+If it's missing, add it.
+
+### 1.3: Configure database connection
+
+Your `src/main/resources/application.properties` needs to be configured so Spring Boot can connect to the MySQL database. Add or update these lines:
 
 ```properties
-spring.datasource.url=${DATABASE_URL:jdbc:postgresql://localhost:5432/mydb}
-spring.datasource.username=${DATABASE_USERNAME:postgres}
-spring.datasource.password=${DATABASE_PASSWORD:postgres}
+spring.datasource.url=${DATABASE_URL:jdbc:mysql://localhost:3306/mydb}
+spring.datasource.username=${DATABASE_USERNAME:root}
+spring.datasource.password=${DATABASE_PASSWORD:root}
 spring.jpa.hibernate.ddl-auto=update
 ```
 
-> **What does this mean?** The `${DATABASE_URL:jdbc:postgresql://...}` syntax means "use the `DATABASE_URL` environment variable if it exists, otherwise fall back to the default value." This way, the same code works both locally and in Docker.
+> **What does this mean?** The `${DATABASE_URL:jdbc:mysql://...}` syntax means "use the `DATABASE_URL` environment variable if it exists, otherwise fall back to the default value." This way, the same code works both locally and in Docker.
 
 Replace `mydb` with whatever you want to call your database.
 
-### 1.3: Create the backend Dockerfile
+### 1.4: Create the Dockerfile
 
 Create a file called `Dockerfile` in your project root (next to `pom.xml`):
 
@@ -135,7 +152,9 @@ ENTRYPOINT ["java", "-jar", "app.jar"]
 
 > **Why two stages?** The build stage contains Maven, the full JDK, and all your source code — about 800 MB. The runtime stage only has the JRE and your JAR — about 200 MB. Your server doesn't need the build tools.
 
-### 1.4: Test the backend Dockerfile locally
+> **What about the frontend files?** Your HTML/CSS/JS files live inside `src/main/resources/static/`, so they get compiled into the JAR file automatically. Spring Boot serves them — no separate web server needed.
+
+### 1.5: Test the Dockerfile locally
 
 ```bash
 docker build -t my-app .
@@ -148,120 +167,41 @@ The application will probably crash because there's no database — that's fine!
 
 ---
 
-## Step 2: Dockerize Your Frontend (~10 minutes)
-
-Your HTML/CSS/JS frontend will be served by Nginx, which also acts as a reverse proxy — forwarding API requests to the backend.
-
-### 2.1: Create the Nginx configuration
-
-Create a file called `nginx.conf` inside your `frontend/` folder:
-
-```nginx
-server {
-    listen 80;
-
-    # Serve static files (HTML, CSS, JS)
-    location / {
-        root /usr/share/nginx/html;
-        index index.html;
-        try_files $uri $uri/ /index.html;
-    }
-
-    # Forward API requests to the backend
-    location /api/ {
-        proxy_pass http://app:8080/api/;
-        proxy_set_header Host $host;
-        proxy_set_header X-Real-IP $remote_addr;
-    }
-}
-```
-
-> **What is a reverse proxy?** When your JavaScript makes a request to `/api/todos`, Nginx intercepts it and forwards it to `http://app:8080/api/todos` — the Spring Boot container. The browser never talks directly to the backend. The name `app` comes from the Docker Compose service name (you'll set that up in Step 3).
-
-### 2.2: Create a .dockerignore for the frontend
-
-Create a file called `.dockerignore` inside your `frontend/` folder:
-
-```
-Dockerfile
-nginx.conf
-```
-
-This prevents the Dockerfile and nginx.conf from being copied into the web-served directory.
-
-### 2.3: Create the frontend Dockerfile
-
-Create a file called `Dockerfile` inside your `frontend/` folder:
-
-```dockerfile
-FROM nginx:alpine
-RUN rm /etc/nginx/conf.d/default.conf
-COPY nginx.conf /etc/nginx/conf.d/default.conf
-COPY . /usr/share/nginx/html/
-EXPOSE 80
-```
-
-This copies all your frontend files (HTML, CSS, JS, images — everything in `frontend/`) into Nginx's web directory.
-
-> **Subfolders work fine.** If your frontend has folders like `css/`, `js/`, or `images/`, they'll be copied along with everything else.
-
-### 2.4: Test the frontend Dockerfile locally
-
-```bash
-cd frontend
-docker build -t my-frontend .
-docker run --rm -p 80:80 my-frontend
-```
-
-Open `http://localhost` in your browser. You should see your HTML page. API requests won't work yet (the backend isn't connected), but the page itself should load.
-
-Press `Ctrl+C` to stop. Go back to your project root: `cd ..`
-
----
-
-## Step 3: Create Docker Compose Files (~10 minutes)
+## Step 2: Create Docker Compose Files (~10 minutes)
 
 You'll create two compose files:
 - **`docker-compose.yml`** — for local development (builds from your source code)
 - **`docker-compose.prod.yml`** — for production (pulls pre-built images from GitHub)
 
-### 3.1: Development compose file
+### 2.1: Development compose file
 
 Create `docker-compose.yml` in your project root:
 
 ```yaml
 services:
   db:
-    image: postgres:17
+    image: mysql:8
     environment:
-      POSTGRES_DB: mydb
-      POSTGRES_USER: postgres
-      POSTGRES_PASSWORD: postgres
+      MYSQL_DATABASE: mydb
+      MYSQL_ROOT_PASSWORD: root
     volumes:
-      - pgdata:/var/lib/postgresql/data
+      - mysqldata:/var/lib/mysql
     ports:
-      - "5432:5432"
+      - "3306:3306"
 
   app:
     build: .
     environment:
-      DATABASE_URL: jdbc:postgresql://db:5432/mydb
-      DATABASE_USERNAME: postgres
-      DATABASE_PASSWORD: postgres
+      DATABASE_URL: jdbc:mysql://db:3306/mydb
+      DATABASE_USERNAME: root
+      DATABASE_PASSWORD: root
     depends_on:
       - db
     ports:
       - "8080:8080"
 
-  frontend:
-    build: ./frontend
-    ports:
-      - "80:80"
-    depends_on:
-      - app
-
 volumes:
-  pgdata:
+  mysqldata:
 ```
 
 > **Replace `mydb`** with the database name you used in `application.properties`.
@@ -272,43 +212,37 @@ Test it:
 docker compose up --build
 ```
 
-Open `http://localhost` — your full application should be running! The frontend serves your HTML, API requests are proxied to the backend, and the backend connects to PostgreSQL.
+Open `http://localhost:8080` — your full application should be running! Spring Boot serves your HTML frontend and handles API requests, all connected to MySQL.
 
 Press `Ctrl+C` to stop.
 
-### 3.2: Production compose file
+### 2.2: Production compose file
 
 Create `docker-compose.prod.yml` in your project root:
 
 ```yaml
 services:
   db:
-    image: postgres:17
+    image: mysql:8
     environment:
-      POSTGRES_DB: mydb
-      POSTGRES_USER: postgres
-      POSTGRES_PASSWORD: ${DB_PASSWORD:-postgres}
+      MYSQL_DATABASE: mydb
+      MYSQL_ROOT_PASSWORD: ${DB_PASSWORD:-root}
     volumes:
-      - pgdata:/var/lib/postgresql/data
+      - mysqldata:/var/lib/mysql
 
   app:
     image: ghcr.io/YOUR_USERNAME/YOUR_PROJECT:latest
     environment:
-      DATABASE_URL: jdbc:postgresql://db:5432/mydb
-      DATABASE_USERNAME: postgres
-      DATABASE_PASSWORD: ${DB_PASSWORD:-postgres}
+      DATABASE_URL: jdbc:mysql://db:3306/mydb
+      DATABASE_USERNAME: root
+      DATABASE_PASSWORD: ${DB_PASSWORD:-root}
     depends_on:
       - db
-
-  frontend:
-    image: ghcr.io/YOUR_USERNAME/YOUR_PROJECT-frontend:latest
     ports:
-      - "80:80"
-    depends_on:
-      - app
+      - "80:8080"
 
 volumes:
-  pgdata:
+  mysqldata:
 ```
 
 **Replace these placeholders:**
@@ -325,18 +259,18 @@ volumes:
 
 | | Development | Production |
 |---|---|---|
-| Backend | `build: .` (builds from source) | `image: ghcr.io/...` (pulls pre-built image) |
-| Frontend | `build: ./frontend` (builds from source) | `image: ghcr.io/...` (pulls pre-built image) |
-| DB password | Hardcoded `postgres` | `${DB_PASSWORD:-postgres}` (from `.env` file) |
-| Ports | All services expose ports | Only frontend exposes port 80 |
+| App | `build: .` (builds from source) | `image: ghcr.io/...` (pulls pre-built image) |
+| App port | `8080:8080` | `80:8080` (accessible on port 80) |
+| DB password | Hardcoded `root` | `${DB_PASSWORD:-root}` (from `.env` file) |
+| DB port | Exposed (`3306:3306`) | Not exposed (internal only) |
 
 ---
 
-## Step 4: Create the GitHub Actions Workflow (~15 minutes)
+## Step 3: Create the GitHub Actions Workflow (~15 minutes)
 
 This is the heart of the CI/CD pipeline. You'll create a workflow file that GitHub runs automatically every time you push to `main`.
 
-### 4.1: Create the workflow file
+### 3.1: Create the workflow file
 
 Create the file `.github/workflows/ci.yml` (you'll need to create the `.github/workflows/` directories):
 
@@ -369,7 +303,7 @@ jobs:
       - name: Build and test with Maven
         run: mvn clean package
 
-  build-and-push-backend:
+  build-and-push:
     needs: build-and-test
     runs-on: ubuntu-latest
     permissions:
@@ -386,7 +320,7 @@ jobs:
           username: ${{ github.actor }}
           password: ${{ secrets.GITHUB_TOKEN }}
 
-      - name: Build and push backend image
+      - name: Build and push image
         uses: docker/build-push-action@v5
         with:
           context: .
@@ -395,34 +329,8 @@ jobs:
             ghcr.io/YOUR_USERNAME/YOUR_PROJECT:latest
             ghcr.io/YOUR_USERNAME/YOUR_PROJECT:${{ github.sha }}
 
-  build-and-push-frontend:
-    needs: build-and-test
-    runs-on: ubuntu-latest
-    permissions:
-      contents: read
-      packages: write
-    steps:
-      - name: Checkout code
-        uses: actions/checkout@v4
-
-      - name: Log in to GitHub Container Registry
-        uses: docker/login-action@v3
-        with:
-          registry: ghcr.io
-          username: ${{ github.actor }}
-          password: ${{ secrets.GITHUB_TOKEN }}
-
-      - name: Build and push frontend image
-        uses: docker/build-push-action@v5
-        with:
-          context: ./frontend
-          push: true
-          tags: |
-            ghcr.io/YOUR_USERNAME/YOUR_PROJECT-frontend:latest
-            ghcr.io/YOUR_USERNAME/YOUR_PROJECT-frontend:${{ github.sha }}
-
   deploy:
-    needs: [build-and-push-backend, build-and-push-frontend]
+    needs: build-and-push
     runs-on: ubuntu-latest
     steps:
       - name: Deploy to Azure VM
@@ -444,44 +352,39 @@ jobs:
             docker image prune -f
 ```
 
-**Replace `YOUR_USERNAME` and `YOUR_PROJECT`** with your lowercase GitHub username and repository name — in all four image tag lines.
+**Replace `YOUR_USERNAME` and `YOUR_PROJECT`** with your lowercase GitHub username and repository name — in both image tag lines.
 
-> **Important:** Also change `cd ~/my-app` in the deploy script to match the directory name you'll create on your server in Step 7.
+> **Important:** Also change `cd ~/my-app` in the deploy script to match the directory name you'll create on your server in Step 6.
 
-### 4.2: How the pipeline works
+### 3.2: How the pipeline works
 
 Here's what happens when you push to `main`:
 
 ```
-                    build-and-test
-                   (compile + tests)
-                         │
-              ┌──────────┴──────────┐
-              ▼                     ▼
-   build-and-push-backend   build-and-push-frontend
-   (Docker image → GHCR)    (Docker image → GHCR)
-              │                     │
-              └──────────┬──────────┘
-                         ▼
-                       deploy
-                (SSH → pull → restart)
+    build-and-test
+   (compile + tests)
+         │
+         ▼
+    build-and-push
+ (Docker image → GHCR)
+         │
+         ▼
+       deploy
+(SSH → pull → restart)
 ```
 
 | Job | What it does |
 |-----|-------------|
 | **build-and-test** | Checks out your code, installs JDK 21, runs `mvn clean package` (compiles + runs tests) |
-| **build-and-push-backend** | Builds a Docker image from your root `Dockerfile`, pushes it to GHCR |
-| **build-and-push-frontend** | Builds a Docker image from `frontend/Dockerfile`, pushes it to GHCR |
-| **deploy** | SSHes into your Azure VM, pulls the new images, restarts the containers |
+| **build-and-push** | Builds a Docker image from your `Dockerfile`, pushes it to GHCR |
+| **deploy** | SSHes into your Azure VM, pulls the new image, restarts the containers |
 
-The backend and frontend images are built **in parallel** after tests pass. The deploy job waits for both to finish.
-
-### 4.3: Verify your image names match
+### 3.3: Verify your image names match
 
 The image names must be **exactly the same** in three places:
 
 1. `.github/workflows/ci.yml` (the `tags:` lines)
-2. `docker-compose.prod.yml` (the `image:` lines)
+2. `docker-compose.prod.yml` (the `image:` line)
 3. What you log in to pull on the server
 
 Quick check:
@@ -493,11 +396,11 @@ grep -r "ghcr.io/" .github/ docker-compose.prod.yml
 
 ---
 
-## Step 5: Set Up SSH Keys for Deployment (~15 minutes)
+## Step 4: Set Up SSH Keys for Deployment (~15 minutes)
 
 The deploy job needs to SSH into your Azure VM. You'll create a **dedicated deploy key** — a separate SSH key used only by GitHub Actions.
 
-### 5.1: Why a dedicated key?
+### 4.1: Why a dedicated key?
 
 You probably already have an SSH key (`~/.ssh/id_ed25519`) that you use to connect to your VM. So why create a new one?
 
@@ -505,7 +408,7 @@ You probably already have an SSH key (`~/.ssh/id_ed25519`) that you use to conne
 - **Principle of least privilege:** The deploy key only needs to exist on GitHub and on the server — nowhere else
 - **Easy to rotate:** You can regenerate a deploy key without disrupting your day-to-day SSH access
 
-### 5.2: Understanding SSH key pairs
+### 4.2: Understanding SSH key pairs
 
 An SSH key pair consists of two files:
 
@@ -526,7 +429,7 @@ An SSH key pair consists of two files:
 
 The private key proves your identity. The public key is the lock that only the private key can open.
 
-### 5.3: Generate the deploy key
+### 4.3: Generate the deploy key
 
 On your **local machine**, run:
 
@@ -545,7 +448,7 @@ This creates two files:
 - `~/.ssh/deploy_key` — the private key
 - `~/.ssh/deploy_key.pub` — the public key
 
-### 5.4: Add the public key to your Azure VM
+### 4.4: Add the public key to your Azure VM
 
 You need to add the public key to your server so it accepts connections from GitHub Actions.
 
@@ -591,7 +494,7 @@ Then exit the server:
 exit
 ```
 
-### 5.5: Test the deploy key
+### 4.5: Test the deploy key
 
 Before configuring GitHub, verify the key works from your local machine:
 
@@ -612,18 +515,18 @@ You should see: `Deploy key works!`
 
 ---
 
-## Step 6: Configure GitHub Secrets (~5 minutes)
+## Step 5: Configure GitHub Secrets (~5 minutes)
 
 GitHub Secrets are encrypted variables that only GitHub Actions can read. You'll store your server connection details here.
 
-### 6.1: Navigate to secrets
+### 5.1: Navigate to secrets
 
 1. Go to your repository on GitHub
 2. Click **Settings** (top menu, far right)
 3. In the left sidebar, click **Secrets and variables** → **Actions**
 4. Click **"New repository secret"**
 
-### 6.2: Add three secrets
+### 5.2: Add three secrets
 
 Add each of these one at a time:
 
@@ -662,7 +565,7 @@ Copy **everything** — including the `-----BEGIN OPENSSH PRIVATE KEY-----` and 
 
 Click **"Add secret"**.
 
-### 6.3: Verify
+### 5.3: Verify
 
 After adding all three, you should see them listed under "Repository secrets":
 
@@ -676,11 +579,11 @@ You can't view the values after saving (that's the point of secrets), but you ca
 
 ---
 
-## Step 7: Prepare Your Azure VM (~15 minutes)
+## Step 6: Prepare Your Azure VM (~15 minutes)
 
 Your server needs Docker (you should already have this) and a few things set up before the first deployment.
 
-### 7.1: Verify Docker is installed
+### 6.1: Verify Docker is installed
 
 SSH into your server:
 
@@ -697,7 +600,7 @@ sudo systemctl status docker
 
 If Docker isn't installed, follow the [Docker installation exercise](../class/exercises.md#exercise-3-install-docker-20-minutes) from the class materials.
 
-### 7.2: Authenticate with GitHub Container Registry
+### 6.2: Authenticate with GitHub Container Registry
 
 Your server needs permission to pull your Docker images from GHCR. You'll create a Personal Access Token (PAT) for this.
 
@@ -726,7 +629,7 @@ Replace `YOUR_TOKEN` with the token you just copied and `YOUR_USERNAME` with you
 
 You should see: `Login Succeeded`
 
-### 7.3: Create the app directory and compose file
+### 6.3: Create the app directory and compose file
 
 The deploy job expects to find a production compose file on the server. Create the directory:
 
@@ -734,7 +637,7 @@ The deploy job expects to find a production compose file on the server. Create t
 mkdir -p ~/my-app
 ```
 
-> **Match the directory name** to what you used in the `cd ~/my-app` line in your workflow file (Step 4).
+> **Match the directory name** to what you used in the `cd ~/my-app` line in your workflow file (Step 3).
 
 Create the compose file:
 
@@ -742,11 +645,11 @@ Create the compose file:
 nano ~/my-app/docker-compose.prod.yml
 ```
 
-Paste the contents of your `docker-compose.prod.yml` (from Step 3.2) — with your actual username and project name already filled in.
+Paste the contents of your `docker-compose.prod.yml` (from Step 2.2) — with your actual username and project name already filled in.
 
 Save with `Ctrl+O`, Enter, `Ctrl+X`.
 
-### 7.4: (Optional) Set a real database password
+### 6.4: (Optional) Set a real database password
 
 For a basic student project the default password is fine, but if you want to be more secure:
 
@@ -755,9 +658,9 @@ echo "DB_PASSWORD=$(openssl rand -base64 24)" > ~/my-app/.env
 cat ~/my-app/.env   # See what password was generated
 ```
 
-The `${DB_PASSWORD:-postgres}` syntax in the compose file will pick up the password from this `.env` file.
+The `${DB_PASSWORD:-root}` syntax in the compose file will pick up the password from this `.env` file.
 
-### 7.5: Check the firewall
+### 6.5: Check the firewall
 
 Make sure ports 80 and 443 are open. Check both levels:
 
@@ -786,11 +689,11 @@ exit
 
 ---
 
-## Step 8: Push and Deploy (~10 minutes)
+## Step 7: Push and Deploy (~10 minutes)
 
 Everything is in place. Time to push your changes and watch the magic happen!
 
-### 8.1: Commit and push
+### 7.1: Commit and push
 
 From your project directory on your local machine:
 
@@ -800,7 +703,7 @@ git commit -m "Add Docker and CI/CD pipeline for Azure deployment"
 git push
 ```
 
-### 8.2: Watch the pipeline
+### 7.2: Watch the pipeline
 
 1. Go to your repository on GitHub
 2. Click the **"Actions"** tab
@@ -811,17 +714,16 @@ Click on it to see the live logs for each job:
 ```
 build-and-test          ✅ (compile + tests)
        │
-       ├──▶ build-and-push-backend      ⏳ (building Docker image...)
+       ▼
+build-and-push          ⏳ (building Docker image...)
        │
-       └──▶ build-and-push-frontend     ⏳ (building Docker image...)
-                    │
-                    ▼
-                 deploy               ⏳ (waiting...)
+       ▼
+deploy                  ⏳ (waiting...)
 ```
 
 The full pipeline usually takes 3-5 minutes.
 
-### 8.3: Verify it works
+### 7.3: Verify it works
 
 Once the pipeline shows all green checkmarks:
 
@@ -832,13 +734,12 @@ ssh azureuser@YOUR_SERVER_IP
 docker ps
 ```
 
-You should see three containers running:
+You should see two containers running:
 
 ```
 CONTAINER ID   IMAGE                                              STATUS
-abc123...      ghcr.io/yourname/your-project-frontend:latest      Up 30 seconds
-def456...      ghcr.io/yourname/your-project:latest               Up 35 seconds
-ghi789...      postgres:17                                         Up 40 seconds
+abc123...      ghcr.io/yourname/your-project:latest               Up 30 seconds
+def456...      mysql:8                                             Up 35 seconds
 ```
 
 **Check in your browser:**
@@ -847,15 +748,15 @@ Open `http://YOUR_SERVER_IP` — you should see your application!
 
 ---
 
-## Step 9: Test Automatic Deployment (~5 minutes)
+## Step 8: Test Automatic Deployment (~5 minutes)
 
 The whole point of CI/CD is that changes deploy automatically. Let's verify:
 
-1. Open your `frontend/index.html` locally
+1. Open your `src/main/resources/static/index.html` locally
 2. Make a visible change (e.g., change a heading or add some text)
 3. Commit and push:
    ```bash
-   git add frontend/index.html
+   git add src/main/resources/static/index.html
    git commit -m "Update frontend heading"
    git push
    ```
@@ -880,22 +781,21 @@ You push code to GitHub
 │  1. Checkout code                             │
 │  2. Build Java app with Maven                 │
 │  3. Run tests                                 │
-│  4. Build backend Docker image                │
-│  5. Build frontend Docker image               │
-│  6. Push both images to GHCR                  │
-│  7. SSH into your Azure VM                    │
-│  8. Pull the new images                       │
-│  9. Restart all containers                    │
+│  4. Build Docker image                        │
+│  5. Push image to GHCR                        │
+│  6. SSH into your Azure VM                    │
+│  7. Pull the new image                        │
+│  8. Restart all containers                    │
 └──────────────────────────────────────────────┘
         │
         ▼
 ┌──────────────────────────────────────────────┐
 │            Your Azure VM                      │
 │                                               │
-│  frontend (nginx:80) ──▶ app (8080)          │
-│                            │                  │
-│                            ▼                  │
-│                      db (PostgreSQL)           │
+│  app (Spring Boot, port 80)                   │
+│    ├── serves HTML/CSS/JS                     │
+│    ├── handles /api/ requests                 │
+│    └── connects to ──▶ db (MySQL)             │
 └──────────────────────────────────────────────┘
         │
         ▼
@@ -921,7 +821,7 @@ The Java build or tests failed. Click on the failed job to see Maven output.
 ### Pipeline fails at "Build and push image"
 
 **Common causes:**
-- `Dockerfile` syntax error — check that the file is in the right location (root for backend, `frontend/` for frontend)
+- `Dockerfile` syntax error — check that the file is in the right location (project root, next to `pom.xml`)
 - GHCR permissions — the workflow needs `packages: write` permission (already set in the workflow file)
 - Image name contains uppercase — use lowercase everywhere
 
@@ -941,18 +841,18 @@ The SSH connection failed. Check:
 ssh -i ~/.ssh/deploy_key azureuser@YOUR_SERVER_IP echo "Connection works"
 ```
 
-### Containers start but the app shows "502 Bad Gateway"
+### App shows a blank page or "Whitelabel Error Page"
 
-Nginx can reach the backend container, but the backend isn't ready yet.
+Spring Boot can't find your static files.
 
-1. Check backend logs: `docker logs my-app-app-1` (replace `my-app` with your directory name)
-2. Spring Boot takes 15-20 seconds to start — wait and refresh
-3. If it keeps crashing, look for database connection errors in the logs
+1. Check that your HTML files are in `src/main/resources/static/` — not in a separate `frontend/` folder
+2. Make sure there's an `index.html` in the `static/` directory
+3. Rebuild: `mvn clean package` and check that the JAR contains your files: `jar tf target/*.jar | grep static`
 
 ### "Connection refused" in browser
 
 1. Is port 80 open? Check both Azure Portal firewall AND `sudo ufw status` on the server
-2. Is the frontend container running? `docker ps`
+2. Is the app container running? `docker ps`
 3. Are you using `http://` not `https://`?
 
 ### Backend can't connect to database
@@ -965,12 +865,28 @@ cd ~/my-app
 docker compose -f docker-compose.prod.yml config
 ```
 
+### App starts but crashes after a few seconds
+
+The database might not be ready yet. MySQL can take 10-20 seconds to initialize on the first start. Check the app logs:
+
+```bash
+docker logs my-app-app-1
+```
+
+If you see connection errors, wait a moment and restart the app container:
+
+```bash
+docker compose -f docker-compose.prod.yml restart app
+```
+
+> **For a more robust setup**, you can add a health check to the db service and use `depends_on` with `condition: service_healthy`. But for a student project, a simple restart usually does the job.
+
 ### "Image not found" or "Manifest unknown"
 
-1. Did the build-and-push jobs succeed in GitHub Actions?
-2. Go to your GitHub profile → **Packages** — do you see your images?
-3. Are the image names in `docker-compose.prod.yml` on the server **exactly** the same as in `ci.yml`?
-4. Did you run `docker login ghcr.io` on the server? (Step 7.2)
+1. Did the build-and-push job succeed in GitHub Actions?
+2. Go to your GitHub profile → **Packages** — do you see your image?
+3. Is the image name in `docker-compose.prod.yml` on the server **exactly** the same as in `ci.yml`?
+4. Did you run `docker login ghcr.io` on the server? (Step 6.2)
 
 ### Images are private and server can't pull them
 
@@ -979,13 +895,12 @@ By default, GHCR packages may be private. To make them public:
 1. Go to your GitHub profile → **Packages**
 2. Click on the package (e.g., `your-project`)
 3. **Package settings** → **Danger Zone** → **Change visibility** → **Public**
-4. Repeat for `your-project-frontend`
 
 Alternatively, keep them private — as long as you ran `docker login ghcr.io` on the server, it can pull private packages.
 
 ### Database data is lost after redeploy
 
-Data should survive redeployments — the `pgdata` Docker volume persists across container restarts.
+Data should survive redeployments — the `mysqldata` Docker volume persists across container restarts.
 
 If data is disappearing, make sure the deploy script uses `docker compose up -d` (which only recreates containers with new images) — NOT `docker compose down` first (which can remove volumes).
 
@@ -1010,9 +925,9 @@ sudo systemctl disable apache2
 
 | Skill | What you did |
 |-------|-------------|
-| **Dockerfiles** | Created multi-stage builds for backend and frontend |
-| **Nginx reverse proxy** | Configured Nginx to serve static files and proxy API requests |
-| **Docker Compose** | Orchestrated a 3-service application (frontend + backend + database) |
+| **Dockerfiles** | Created a multi-stage build for your Spring Boot application |
+| **Spring Boot static files** | Served your HTML/CSS/JS frontend directly from Spring Boot |
+| **Docker Compose** | Orchestrated a 2-service application (app + database) |
 | **GitHub Actions** | Built a CI/CD pipeline from scratch |
 | **GitHub Container Registry** | Pushed and pulled Docker images |
 | **SSH key management** | Created and deployed a dedicated key pair |
@@ -1115,7 +1030,7 @@ Type `y` when asked.
 3. Add port 80 (name: `AllowHTTP`)
 4. Repeat for port 443 (name: `AllowHTTPS`)
 
-You're ready! Go back to [Step 1](#step-1-dockerize-your-backend-15-minutes) to continue with the tutorial.
+You're ready! Go back to [Step 1](#step-1-dockerize-your-application-15-minutes) to continue with the tutorial.
 
 ---
 
