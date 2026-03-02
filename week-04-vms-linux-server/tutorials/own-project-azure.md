@@ -37,6 +37,7 @@ Spring Boot serves everything: your static files (HTML, CSS, JS) and your API en
 
 Before starting, you should have:
 
+- [ ] **Docker** installed on your local machine — this is the only tool you need. You do **not** need Java, Maven, or anything else installed locally.
 - [ ] A GitHub repository containing your project code
 - [ ] A Java/Spring Boot backend (with a `pom.xml`)
 - [ ] An HTML/CSS/JS frontend (in `src/main/resources/static/`)
@@ -66,6 +67,37 @@ your-project/
 Spring Boot automatically serves files from `src/main/resources/static/` at the root URL. So `static/index.html` becomes available at `http://localhost:8080/`.
 
 > **Frontend in a different folder?** If your HTML files are currently in a separate `frontend/` folder, move them into `src/main/resources/static/`. Spring Boot won't serve them otherwise.
+
+---
+
+## Build Environment: No Java Installation Needed
+
+A common source of frustration is getting Java, Maven, and `JAVA_HOME` set up correctly on your machine. Different versions, different paths, different operating systems — it's a mess.
+
+The good news: **you don't need any of that.** Docker can be your build environment. Instead of installing JDK 21 and Maven locally, you'll use a Docker container that has everything pre-configured. The build runs inside the container, and the result (your JAR file) appears on your machine.
+
+```
+┌──────────────────────────────────────────────┐
+│  Docker container (maven:3.9-eclipse-temurin-21)  │
+│                                               │
+│  ✓ JDK 21 — already installed                 │
+│  ✓ Maven 3.9 — already installed              │
+│  ✓ JAVA_HOME — already configured             │
+│                                               │
+│  Your project files are mounted into /app     │
+│  Build output goes to target/ on your machine │
+└──────────────────────────────────────────────┘
+```
+
+You'll set this up as part of the Docker Compose file in Step 2. Once it's ready, you'll build your project like this:
+
+```bash
+docker compose run --rm build mvn clean package
+```
+
+That's it. No Java installation, no `JAVA_HOME` issues, and everyone on the team gets the exact same build environment.
+
+> **Can I still use my local Java?** Of course. If you have Java and Maven working on your machine, you can keep using `mvn clean package` directly. The Docker build environment is there for when things go wrong or when you want a guaranteed consistent setup.
 
 ---
 
@@ -163,7 +195,7 @@ docker run --rm -p 8080:8080 my-app
 
 The application will probably crash because there's no database — that's fine! You should see Spring Boot starting up before the database error. If you see `Started MyApplication in X seconds`, your Dockerfile works. Press `Ctrl+C` to stop.
 
-> **If the build fails:** Check that your `pom.xml` is valid and that `mvn clean package` works when you run it directly on your machine.
+> **If the build fails:** Check that your `pom.xml` is valid. You can verify with the build service from Step 2: `docker compose run --rm build mvn clean package` — this runs Maven inside Docker, so Java version and JAVA_HOME issues can't be the cause.
 
 ---
 
@@ -199,6 +231,14 @@ Create `docker-compose.yml` in your project root:
 
 ```yaml
 services:
+  build:
+    image: maven:3.9-eclipse-temurin-21
+    working_dir: /app
+    volumes:
+      - .:/app
+      - maven-cache:/root/.m2
+    profiles: ["tools"]
+
   db:
     image: mysql:8
     environment:
@@ -222,11 +262,27 @@ services:
 
 volumes:
   mysqldata:
+  maven-cache:
 ```
 
 > **Replace `mydb`** with the database name you used in `application.properties`.
 
-Test it:
+**The `build` service** is your portable build environment. It mounts your project directory into the container and caches Maven dependencies so they're only downloaded once. The `profiles: ["tools"]` line means it won't start when you run `docker compose up` — it's only used when you explicitly call it:
+
+```bash
+# Build your project (same as mvn clean package, but inside Docker)
+docker compose run --rm build mvn clean package
+
+# Run tests
+docker compose run --rm build mvn test
+
+# Any Maven command works
+docker compose run --rm build mvn dependency:tree
+```
+
+The `--rm` flag removes the container after it finishes, keeping things tidy. The built JAR file appears in your local `target/` folder as usual.
+
+**Test the full stack:**
 
 ```bash
 docker compose up --build
