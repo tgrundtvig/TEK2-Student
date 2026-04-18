@@ -4,6 +4,8 @@
 
 Read through this before class. You don't need to memorize everything — focus on the big picture. The exercises will pin down the details.
 
+> **Watch first:** [**The OSI Model** (10-minute video)](https://tek2.apps.tobiasgrundtvig.dk/week-11/) — a fast way to get the whole picture before you dig into the text below.
+
 ---
 
 ## Introduction: Zooming Out

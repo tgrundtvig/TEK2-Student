@@ -44,6 +44,7 @@ By the end of this week, you should be able to:
 | File | Description |
 |------|-------------|
 | [quick-reference.md](quick-reference.md) | One-page cheat sheet (print this!) |
+| [🎬 OSI Model video (10 min)](https://tek2.apps.tobiasgrundtvig.dk/week-11/) | Pre-class video — start here |
 | [pre-class/reading.md](pre-class/reading.md) | OSI model, IPv6 addressing, VPN fundamentals |
 | [pre-class/exercises.md](pre-class/exercises.md) | Map commands to OSI layers, explore IPv6 on your machine |
 | [class/exercises.md](class/exercises.md) | OSI scavenger hunt, IPv6 in Docker, SSH tunneling, WireGuard VPN |
