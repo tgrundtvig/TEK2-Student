@@ -2,12 +2,15 @@
 
 **Estimated reading time: 45-60 minutes**
 
-> **Watch first (or alongside):**
-> - 🎬 [Why Docker exists — the "works on my machine" problem](https://tek2.apps.tobiasgrundtvig.dk/week-01/why-docker-exists/) (5 min)
-> - 🎬 [VMs vs Containers — what's actually shared](https://tek2.apps.tobiasgrundtvig.dk/week-01/vms-vs-containers/) (5 min)
-> - 🎬 [Image vs Container — the recipe vs the meal](https://tek2.apps.tobiasgrundtvig.dk/week-01/image-vs-container/) (5 min)
+> **Video library for this week** — each is self-contained, pick what you need:
 >
-> Each video is self-contained — pick the one you need, or watch all three in order.
+> 1. 🎬 [Why Docker exists](https://tek2.apps.tobiasgrundtvig.dk/week-01/why-docker-exists/) (5 min) — the "works on my machine" problem
+> 2. 🎬 [VMs vs Containers](https://tek2.apps.tobiasgrundtvig.dk/week-01/vms-vs-containers/) (5 min) — what's actually shared
+> 3. 🎬 [Image vs Container](https://tek2.apps.tobiasgrundtvig.dk/week-01/image-vs-container/) (5 min) — the recipe vs the meal
+> 4. 🎬 [`docker run` anatomy](https://tek2.apps.tobiasgrundtvig.dk/week-01/docker-run-anatomy/) (5 min) — every flag explained
+> 5. 🎬 [`run` vs `exec`](https://tek2.apps.tobiasgrundtvig.dk/week-01/run-vs-exec/) (3 min) — new container vs existing one
+> 6. 🎬 [The Linux filesystem](https://tek2.apps.tobiasgrundtvig.dk/week-01/linux-filesystem/) (5 min) — where everything lives
+> 7. 🎬 [Container lifecycle](https://tek2.apps.tobiasgrundtvig.dk/week-01/container-lifecycle/) (4 min) — the state diagram
 
 ---
 
