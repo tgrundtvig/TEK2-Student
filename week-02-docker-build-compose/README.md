@@ -36,6 +36,20 @@ By the end of this week, you should be able to:
 - Docker Desktop running
 - GitHub account with SSH keys configured
 
+## Videos (pick any — each is self-contained)
+
+All videos live at **[tek2.apps.tobiasgrundtvig.dk](https://tek2.apps.tobiasgrundtvig.dk/)**.
+
+| 🎬 Video | Duration | What it covers |
+|---|---|---|
+| [Why container data disappears](https://tek2.apps.tobiasgrundtvig.dk/week-02/container-writable-layer/) | 5 min | The writable layer and why `docker rm` takes your data |
+| [Volumes — named vs bind mounts](https://tek2.apps.tobiasgrundtvig.dk/week-02/volumes-named-vs-bind/) | 5 min | `-v` has two modes; when to use each |
+| [Dockerfile anatomy](https://tek2.apps.tobiasgrundtvig.dk/week-02/dockerfile-anatomy/) | 6 min | FROM, WORKDIR, COPY, RUN, EXPOSE, CMD — instruction by instruction |
+| [Layer caching — why order matters](https://tek2.apps.tobiasgrundtvig.dk/week-02/dockerfile-layer-caching/) | 5 min | Put stable-slow steps before frequently-changing ones |
+| [`docker build` and image tagging](https://tek2.apps.tobiasgrundtvig.dk/week-02/docker-build-and-tags/) | 5 min | Names, tags, context, multiple tags, Docker Hub push |
+| [Docker Compose intro](https://tek2.apps.tobiasgrundtvig.dk/week-02/docker-compose-intro/) | 5 min | One YAML, many containers; anatomy + commands |
+| [Compose networking](https://tek2.apps.tobiasgrundtvig.dk/week-02/compose-networking/) | 5 min | Why services find each other by name (DNS inside Docker) |
+
 ## Materials
 
 | File | Description |

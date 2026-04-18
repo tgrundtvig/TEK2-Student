@@ -4,6 +4,16 @@
 
 This week we solve three problems you experienced in Week 1. Read through each section to understand *why* we need these tools before learning *how* to use them.
 
+> **Video library for this week** — each is self-contained, pick what you need:
+>
+> 1. 🎬 [Why container data disappears](https://tek2.apps.tobiasgrundtvig.dk/week-02/container-writable-layer/) (5 min) — the writable layer
+> 2. 🎬 [Volumes — named vs bind](https://tek2.apps.tobiasgrundtvig.dk/week-02/volumes-named-vs-bind/) (5 min) — the `-v` flag's two modes
+> 3. 🎬 [Dockerfile anatomy](https://tek2.apps.tobiasgrundtvig.dk/week-02/dockerfile-anatomy/) (6 min) — every instruction explained
+> 4. 🎬 [Layer caching](https://tek2.apps.tobiasgrundtvig.dk/week-02/dockerfile-layer-caching/) (5 min) — why order matters
+> 5. 🎬 [`docker build` and tags](https://tek2.apps.tobiasgrundtvig.dk/week-02/docker-build-and-tags/) (5 min)
+> 6. 🎬 [Compose intro](https://tek2.apps.tobiasgrundtvig.dk/week-02/docker-compose-intro/) (5 min) — one file, many containers
+> 7. 🎬 [Compose networking](https://tek2.apps.tobiasgrundtvig.dk/week-02/compose-networking/) (5 min) — how services find each other
+
 ---
 
 ## The Data Persistence Problem
