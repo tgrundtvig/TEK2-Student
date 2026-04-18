@@ -2,6 +2,13 @@
 
 **Estimated reading time: 45-60 minutes**
 
+> **Watch first (or alongside):**
+> - 🎬 [Why Docker exists — the "works on my machine" problem](https://tek2.apps.tobiasgrundtvig.dk/week-01/why-docker-exists/) (5 min)
+> - 🎬 [VMs vs Containers — what's actually shared](https://tek2.apps.tobiasgrundtvig.dk/week-01/vms-vs-containers/) (5 min)
+> - 🎬 [Image vs Container — the recipe vs the meal](https://tek2.apps.tobiasgrundtvig.dk/week-01/image-vs-container/) (5 min)
+>
+> Each video is self-contained — pick the one you need, or watch all three in order.
+
 ---
 
 ## The Problem Docker Solves

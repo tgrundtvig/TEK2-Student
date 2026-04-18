@@ -36,6 +36,9 @@ By the end of this week, you should be able to:
 | File | Description |
 |------|-------------|
 | [quick-reference.md](quick-reference.md) | One-page cheat sheet (print this!) |
+| 🎬 [Why Docker exists (5 min)](https://tek2.apps.tobiasgrundtvig.dk/week-01/why-docker-exists/) | The "works on my machine" problem, in three scenarios |
+| 🎬 [VMs vs Containers (5 min)](https://tek2.apps.tobiasgrundtvig.dk/week-01/vms-vs-containers/) | What's actually shared — kernel, userspace, overhead |
+| 🎬 [Image vs Container (5 min)](https://tek2.apps.tobiasgrundtvig.dk/week-01/image-vs-container/) | The recipe vs the meal — the single most confused concept |
 | [pre-class/reading.md](pre-class/reading.md) | Conceptual introduction to Docker |
 | [pre-class/exercises.md](pre-class/exercises.md) | Installation and first steps |
 | [class/exercises.md](class/exercises.md) | Guided hands-on exercises |
