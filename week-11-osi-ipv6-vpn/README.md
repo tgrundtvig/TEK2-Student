@@ -39,6 +39,16 @@ By the end of this week, you should be able to:
 - Docker installed and running
 - Wireshark installed and working
 
+## Videos (pick any — each is self-contained)
+
+All videos live at **[tek2.apps.tobiasgrundtvig.dk/week-11](https://tek2.apps.tobiasgrundtvig.dk/#week-11)**.
+
+| 🎬 Video | Duration | What it covers |
+|---|---|---|
+| [The OSI Model](https://tek2.apps.tobiasgrundtvig.dk/week-11/osi-model/) | 10:45 | A single map for everything you already know about networking |
+| [IPv6 fundamentals — why the internet needed a bigger phone book](https://tek2.apps.tobiasgrundtvig.dk/week-11/ipv6-fundamentals/) | 3:48 | IPv4 gave us 4 billion addresses |
+| [VPN fundamentals — encrypted tunnels](https://tek2.apps.tobiasgrundtvig.dk/week-11/vpn-fundamentals/) | 3:03 | A VPN wraps your network traffic in an encrypted tunnel, making it look like one point-… |
+
 ## Materials
 
 | File | Description |

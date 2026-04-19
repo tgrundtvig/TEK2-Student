@@ -2,7 +2,19 @@
 
 **Estimated reading time: 45-60 minutes**
 
+> **Video library for this week** — each is self-contained, pick what you need:
+>
+> 1. 🎬 [IP vs MAC — why you need both](https://tek2.apps.tobiasgrundtvig.dk/week-05/ip-vs-mac/) (2:23) — Your laptop has two addresses
+> 2. 🎬 [Private vs public IPs and NAT](https://tek2.apps.tobiasgrundtvig.dk/week-05/private-vs-public-ip/) (3:19) — Your laptop says 192.168.1.42
+> 3. 🎬 [Ports — which app gets the data](https://tek2.apps.tobiasgrundtvig.dk/week-05/ports-explained/) (2:56) — An IP address gets a packet to the right machine
+> 4. 🎬 [TCP vs UDP — reliable vs fast](https://tek2.apps.tobiasgrundtvig.dk/week-05/tcp-vs-udp/) (2:32) — Two transport protocols
+> 5. 🎬 [The TCP three-way handshake](https://tek2.apps.tobiasgrundtvig.dk/week-05/tcp-handshake/) (2:45) — Before any data flows over TCP, the client and server shake hands
+> 6. 🎬 [docker run -p 8080:80 — what's actually happening](https://tek2.apps.tobiasgrundtvig.dk/week-05/docker-port-mapping/) (2:22) — The -p flag says: forward host port 8080 to container port 80
+> 7. 🎬 [Docker networks — bridge, custom, and DNS](https://tek2.apps.tobiasgrundtvig.dk/week-05/docker-networks/) (2:33) — Docker runs its own tiny DNS server, but only on user-defined networks
+> 8. 🎬 [Wireshark — your first capture](https://tek2.apps.tobiasgrundtvig.dk/week-05/wireshark-first-capture/) (2:57) — Open Wireshark, pick an interface, start capturing
+>
 ---
+
 
 ## The Network You've Already Been Using
 

@@ -41,6 +41,21 @@ From Weeks 1-3, you should have:
 
 ---
 
+## Videos (pick any — each is self-contained)
+
+All videos live at **[tek2.apps.tobiasgrundtvig.dk/week-04](https://tek2.apps.tobiasgrundtvig.dk/#week-04)**.
+
+| 🎬 Video | Duration | What it covers |
+|---|---|---|
+| [IaaS vs PaaS vs SaaS — the cloud pyramid](https://tek2.apps.tobiasgrundtvig.dk/week-04/iaas-paas-saas/) | 2:42 | Three flavors of cloud, one pyramid |
+| [What a virtual machine actually is](https://tek2.apps.tobiasgrundtvig.dk/week-04/what-is-a-vm/) | 2:39 | A VM is a software-simulated computer running on top of a real one |
+| [SSH keys — how they actually prove your identity](https://tek2.apps.tobiasgrundtvig.dk/week-04/ssh-keys-explained/) | 3:19 | Two files, a public key and a private key, together replace your password |
+| [Your first SSH session — fingerprints, scp, and staying safe](https://tek2.apps.tobiasgrundtvig.dk/week-04/first-ssh-session/) | 2:37 | The practical side of SSH |
+| [apt — update, upgrade, install without getting confused](https://tek2.apps.tobiasgrundtvig.dk/week-04/apt-package-management/) | 2:31 | sudo apt update |
+| [systemctl — managing services on Linux](https://tek2.apps.tobiasgrundtvig.dk/week-04/systemctl-basics/) | 2:48 | Linux runs lots of background services — ssh, nginx, docker — and systemd is the thing … |
+| [ufw — a Linux firewall and the lockout trap](https://tek2.apps.tobiasgrundtvig.dk/week-04/ufw-firewall/) | 3:22 | A firewall decides which ports are reachable from the outside world |
+| [Auto-deploy on push — the full CI/CD picture](https://tek2.apps.tobiasgrundtvig.dk/week-04/auto-deploy-on-push/) | 3:02 | You git push |
+
 ## Materials
 
 | Resource | Description | Time |

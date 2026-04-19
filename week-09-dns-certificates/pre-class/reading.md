@@ -2,7 +2,20 @@
 
 **Estimated time: 45-60 minutes**
 
+> **Video library for this week** — each is self-contained, pick what you need:
+>
+> 1. 🎬 [What DNS is — the internet's phone book](https://tek2.apps.tobiasgrundtvig.dk/week-09/what-is-dns/) (2:53) — You type google.com, not 142.250.74.46
+> 2. 🎬 [The DNS hierarchy — root, TLD, authoritative](https://tek2.apps.tobiasgrundtvig.dk/week-09/dns-hierarchy/) (3:04) — DNS isn't one giant server in a basement somewhere
+> 3. 🎬 [DNS record types — A, AAAA, CNAME, MX, NS, TXT](https://tek2.apps.tobiasgrundtvig.dk/week-09/dns-record-types/) (3:34) — DNS doesn't just map a name to one IP
+> 4. 🎬 [dig — reading DNS output like a pro](https://tek2.apps.tobiasgrundtvig.dk/week-09/dig-essentials/) (2:46) — dig is the practical tool for inspecting DNS
+> 5. 🎬 [DNS TTL and caching — why changes take time](https://tek2.apps.tobiasgrundtvig.dk/week-09/dns-ttl-and-caching/) (3:28) — Every DNS record has a TTL — time to live — that says how long answers can be cached
+> 6. 🎬 [TLS certificate anatomy — what's actually inside the padlock](https://tek2.apps.tobiasgrundtvig.dk/week-09/tls-certificate-anatomy/) (3:09) — Click the padlock and you see 'Issued to: github.com'
+> 7. 🎬 [The chain of trust — root, intermediate, server](https://tek2.apps.tobiasgrundtvig.dk/week-09/chain-of-trust/) (3:33) — A server cert alone isn't trusted — your browser has never heard of the issuing company
+> 8. 🎬 [Let's Encrypt and ACME — free automated certificates](https://tek2.apps.tobiasgrundtvig.dk/week-09/lets-encrypt-and-acme/) (3:44) — Ten years ago, HTTPS certificates cost money and had to be renewed by hand
+> 9. 🎬 [The full HTTPS chain — DNS, TCP, TLS, HTTP](https://tek2.apps.tobiasgrundtvig.dk/week-09/full-https-chain/) (4:04) — Type github.com
+>
 ---
+
 
 ## From HTTP to "But How Does It Find the Server?"
 

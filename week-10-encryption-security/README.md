@@ -33,6 +33,22 @@ By the end of this week, you should be able to:
 - Completed Week 9 (TLS certificates, chain of trust)
 - Docker installed and running
 
+## Videos (pick any — each is self-contained)
+
+All videos live at **[tek2.apps.tobiasgrundtvig.dk/week-10](https://tek2.apps.tobiasgrundtvig.dk/#week-10)**.
+
+| 🎬 Video | Duration | What it covers |
+|---|---|---|
+| [Symmetric encryption — one key to lock and unlock](https://tek2.apps.tobiasgrundtvig.dk/week-10/symmetric-encryption/) | 3:05 | Symmetric encryption uses one shared key for both sides of a conversation |
+| [The key distribution problem](https://tek2.apps.tobiasgrundtvig.dk/week-10/key-distribution-problem/) | 2:55 | Symmetric encryption is useless unless both sides share the same key — and for centurie… |
+| [Asymmetric encryption — the public/private key pair](https://tek2.apps.tobiasgrundtvig.dk/week-10/asymmetric-encryption/) | 3:25 | Two mathematically linked keys — a public one you share freely and a private one you guard |
+| [TLS hybrid handshake — asymmetric to exchange, symmetric to run](https://tek2.apps.tobiasgrundtvig.dk/week-10/tls-hybrid-handshake/) | 3:40 | TLS is the best of both worlds |
+| [Digital signatures — asymmetric in reverse](https://tek2.apps.tobiasgrundtvig.dk/week-10/digital-signatures/) | 3:15 | Encryption uses the public key to lock and private to unlock |
+| [Hashing — the one-way function](https://tek2.apps.tobiasgrundtvig.dk/week-10/hashing-explained/) | 3:52 | A hash is a fixed-size fingerprint of any input |
+| [SSH keys revisited — now with the math](https://tek2.apps.tobiasgrundtvig.dk/week-10/ssh-keys-revisited/) | 3:47 | You've used SSH keys since week 4 |
+| [GPG basics — encrypt messages to a human](https://tek2.apps.tobiasgrundtvig.dk/week-10/gpg-basics/) | 3:21 | GPG is the hands-on playground for asymmetric crypto |
+| [Linux file permissions — the first line of defense](https://tek2.apps.tobiasgrundtvig.dk/week-10/linux-file-permissions/) | 4:24 | Everyone types chmod 600 or chmod 755 and nods sagely |
+
 ## Materials
 
 | File | Description |

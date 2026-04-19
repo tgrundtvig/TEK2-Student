@@ -33,6 +33,21 @@ By the end of this week, you should be able to:
 - Wireshark installed and working
 - Docker installed and running
 
+## Videos (pick any — each is self-contained)
+
+All videos live at **[tek2.apps.tobiasgrundtvig.dk/week-08](https://tek2.apps.tobiasgrundtvig.dk/#week-08)**.
+
+| 🎬 Video | Duration | What it covers |
+|---|---|---|
+| [HTTP is just text](https://tek2.apps.tobiasgrundtvig.dk/week-08/http-is-just-text/) | 2:34 | HTTP looks magical until you see what it really is: plain text |
+| [The anatomy of a URL](https://tek2.apps.tobiasgrundtvig.dk/week-08/url-anatomy/) | 2:38 | Every URL has a scheme, a host, optionally a port, a path, and optionally a query string |
+| [HTTP methods and CRUD — GET, POST, PUT, DELETE](https://tek2.apps.tobiasgrundtvig.dk/week-08/http-methods-and-crud/) | 2:24 | Four methods cover most of what you'll ever need |
+| [HTTP status codes — the five families](https://tek2.apps.tobiasgrundtvig.dk/week-08/http-status-codes/) | 2:41 | Three digits on every HTTP response, grouped into five families |
+| [curl in ten minutes — speaking HTTP from the terminal](https://tek2.apps.tobiasgrundtvig.dk/week-08/curl-essentials/) | 2:15 | curl is the universal HTTP client |
+| [HTTP vs HTTPS in Wireshark — the security demo](https://tek2.apps.tobiasgrundtvig.dk/week-08/http-vs-https-wireshark/) | 2:20 | The single most convincing argument for HTTPS |
+| [HTTP headers and cookies — the metadata layer](https://tek2.apps.tobiasgrundtvig.dk/week-08/http-headers-and-cookies/) | 2:54 | Headers are how clients and servers share metadata |
+| [Browser dev tools — the network tab tour](https://tek2.apps.tobiasgrundtvig.dk/week-08/devtools-network-tab/) | 2:14 | Press F12 |
+
 ## Materials
 
 | File | Description |

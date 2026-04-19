@@ -2,9 +2,22 @@
 
 **Estimated reading time: 45-60 minutes**
 
+
 This week we solve a new problem: manual, error-prone deployments. By the end of this week, your code will automatically build and test itself every time you push to GitHub.
 
+> **Video library for this week** — each is self-contained, pick what you need:
+>
+> 1. 🎬 [What CI/CD actually is — the problem before the tool](https://tek2.apps.tobiasgrundtvig.dk/week-03/what-is-ci-cd/) (5:30) — Before touching any YAML: what problems does CI/CD actually solve? Walk from one develo…
+> 2. 🎬 [The Maven build lifecycle — compile, test, package](https://tek2.apps.tobiasgrundtvig.dk/week-03/maven-lifecycle/) (4:57) — You type mvn package and a hundred lines of output scroll by
+> 3. 🎬 [Why Java projects need a build tool](https://tek2.apps.tobiasgrundtvig.dk/week-03/why-maven-exists/) (4:56) — One Hello World compiles fine by hand
+> 4. 🎬 [The Maven project layout and the POM](https://tek2.apps.tobiasgrundtvig.dk/week-03/maven-pom-and-layout/) (7:16) — You've cloned your first Maven project and you're staring at a pile of folders you didn…
+> 5. 🎬 [Anatomy of a GitHub Actions workflow](https://tek2.apps.tobiasgrundtvig.dk/week-03/github-actions-anatomy/) (6:36) — Walk through the structure of a .github/workflows/ci.yml file
+> 6. 🎬 [Running Maven without installing it — Maven in Docker](https://tek2.apps.tobiasgrundtvig.dk/week-03/maven-in-docker/) (5:55) — You don't actually need to install Maven on your laptop
+> 7. 🎬 [GitHub Actions triggers — when workflows actually run](https://tek2.apps.tobiasgrundtvig.dk/week-03/github-actions-triggers/) (3:10) — You wrote a perfectly good workflow, pushed it, and nothing happened
+> 8. 🎬 [Debugging a failing CI run — reading the logs](https://tek2.apps.tobiasgrundtvig.dk/week-03/debugging-ci-failures/) (4:37) — A red X appears on your commit
+>
 ---
+
 
 ## The Manual Deployment Problem
 

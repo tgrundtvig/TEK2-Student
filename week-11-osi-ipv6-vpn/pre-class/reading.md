@@ -2,11 +2,17 @@
 
 **Estimated reading time: 45-60 minutes**
 
+
 Read through this before class. You don't need to memorize everything — focus on the big picture. The exercises will pin down the details.
 
-> **Watch first:** [**The OSI Model** (10-minute video)](https://tek2.apps.tobiasgrundtvig.dk/week-11/) — a fast way to get the whole picture before you dig into the text below.
-
+> **Video library for this week** — each is self-contained, pick what you need:
+>
+> 1. 🎬 [The OSI Model](https://tek2.apps.tobiasgrundtvig.dk/week-11/osi-model/) (10:45) — A single map for everything you already know about networking
+> 2. 🎬 [IPv6 fundamentals — why the internet needed a bigger phone book](https://tek2.apps.tobiasgrundtvig.dk/week-11/ipv6-fundamentals/) (3:48) — IPv4 gave us 4 billion addresses
+> 3. 🎬 [VPN fundamentals — encrypted tunnels](https://tek2.apps.tobiasgrundtvig.dk/week-11/vpn-fundamentals/) (3:03) — A VPN wraps your network traffic in an encrypted tunnel, making it look like one point-…
+>
 ---
+
 
 ## Introduction: Zooming Out
 

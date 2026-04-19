@@ -32,6 +32,22 @@ By the end of this week, you should be able to:
 - Wireshark installed and working
 - Docker installed and running
 
+## Videos (pick any — each is self-contained)
+
+All videos live at **[tek2.apps.tobiasgrundtvig.dk/week-09](https://tek2.apps.tobiasgrundtvig.dk/#week-09)**.
+
+| 🎬 Video | Duration | What it covers |
+|---|---|---|
+| [What DNS is — the internet's phone book](https://tek2.apps.tobiasgrundtvig.dk/week-09/what-is-dns/) | 2:53 | You type google.com, not 142.250.74.46 |
+| [The DNS hierarchy — root, TLD, authoritative](https://tek2.apps.tobiasgrundtvig.dk/week-09/dns-hierarchy/) | 3:04 | DNS isn't one giant server in a basement somewhere |
+| [DNS record types — A, AAAA, CNAME, MX, NS, TXT](https://tek2.apps.tobiasgrundtvig.dk/week-09/dns-record-types/) | 3:34 | DNS doesn't just map a name to one IP |
+| [dig — reading DNS output like a pro](https://tek2.apps.tobiasgrundtvig.dk/week-09/dig-essentials/) | 2:46 | dig is the practical tool for inspecting DNS |
+| [DNS TTL and caching — why changes take time](https://tek2.apps.tobiasgrundtvig.dk/week-09/dns-ttl-and-caching/) | 3:28 | Every DNS record has a TTL — time to live — that says how long answers can be cached |
+| [TLS certificate anatomy — what's actually inside the padlock](https://tek2.apps.tobiasgrundtvig.dk/week-09/tls-certificate-anatomy/) | 3:09 | Click the padlock and you see 'Issued to: github.com' |
+| [The chain of trust — root, intermediate, server](https://tek2.apps.tobiasgrundtvig.dk/week-09/chain-of-trust/) | 3:33 | A server cert alone isn't trusted — your browser has never heard of the issuing company |
+| [Let's Encrypt and ACME — free automated certificates](https://tek2.apps.tobiasgrundtvig.dk/week-09/lets-encrypt-and-acme/) | 3:44 | Ten years ago, HTTPS certificates cost money and had to be renewed by hand |
+| [The full HTTPS chain — DNS, TCP, TLS, HTTP](https://tek2.apps.tobiasgrundtvig.dk/week-09/full-https-chain/) | 4:04 | Type github.com |
+
 ## Materials
 
 | File | Description |

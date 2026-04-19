@@ -31,6 +31,21 @@ By the end of this week, you should be able to:
 - Docker installed and running
 - A computer with administrator/sudo access (for Wireshark installation)
 
+## Videos (pick any — each is self-contained)
+
+All videos live at **[tek2.apps.tobiasgrundtvig.dk/week-05](https://tek2.apps.tobiasgrundtvig.dk/#week-05)**.
+
+| 🎬 Video | Duration | What it covers |
+|---|---|---|
+| [IP vs MAC — why you need both](https://tek2.apps.tobiasgrundtvig.dk/week-05/ip-vs-mac/) | 2:23 | Your laptop has two addresses |
+| [Private vs public IPs and NAT](https://tek2.apps.tobiasgrundtvig.dk/week-05/private-vs-public-ip/) | 3:19 | Your laptop says 192.168.1.42 |
+| [Ports — which app gets the data](https://tek2.apps.tobiasgrundtvig.dk/week-05/ports-explained/) | 2:56 | An IP address gets a packet to the right machine |
+| [TCP vs UDP — reliable vs fast](https://tek2.apps.tobiasgrundtvig.dk/week-05/tcp-vs-udp/) | 2:32 | Two transport protocols |
+| [The TCP three-way handshake](https://tek2.apps.tobiasgrundtvig.dk/week-05/tcp-handshake/) | 2:45 | Before any data flows over TCP, the client and server shake hands |
+| [docker run -p 8080:80 — what's actually happening](https://tek2.apps.tobiasgrundtvig.dk/week-05/docker-port-mapping/) | 2:22 | The -p flag says: forward host port 8080 to container port 80 |
+| [Docker networks — bridge, custom, and DNS](https://tek2.apps.tobiasgrundtvig.dk/week-05/docker-networks/) | 2:33 | Docker runs its own tiny DNS server, but only on user-defined networks |
+| [Wireshark — your first capture](https://tek2.apps.tobiasgrundtvig.dk/week-05/wireshark-first-capture/) | 2:57 | Open Wireshark, pick an interface, start capturing |
+
 ## Materials
 
 | File | Description |

@@ -36,6 +36,21 @@ From Weeks 1-2, you should have:
 
 ---
 
+## Videos (pick any — each is self-contained)
+
+All videos live at **[tek2.apps.tobiasgrundtvig.dk/week-03](https://tek2.apps.tobiasgrundtvig.dk/#week-03)**.
+
+| 🎬 Video | Duration | What it covers |
+|---|---|---|
+| [What CI/CD actually is — the problem before the tool](https://tek2.apps.tobiasgrundtvig.dk/week-03/what-is-ci-cd/) | 5:30 | Before touching any YAML: what problems does CI/CD actually solve? Walk from one develo… |
+| [The Maven build lifecycle — compile, test, package](https://tek2.apps.tobiasgrundtvig.dk/week-03/maven-lifecycle/) | 4:57 | You type mvn package and a hundred lines of output scroll by |
+| [Why Java projects need a build tool](https://tek2.apps.tobiasgrundtvig.dk/week-03/why-maven-exists/) | 4:56 | One Hello World compiles fine by hand |
+| [The Maven project layout and the POM](https://tek2.apps.tobiasgrundtvig.dk/week-03/maven-pom-and-layout/) | 7:16 | You've cloned your first Maven project and you're staring at a pile of folders you didn… |
+| [Anatomy of a GitHub Actions workflow](https://tek2.apps.tobiasgrundtvig.dk/week-03/github-actions-anatomy/) | 6:36 | Walk through the structure of a .github/workflows/ci.yml file |
+| [Running Maven without installing it — Maven in Docker](https://tek2.apps.tobiasgrundtvig.dk/week-03/maven-in-docker/) | 5:55 | You don't actually need to install Maven on your laptop |
+| [GitHub Actions triggers — when workflows actually run](https://tek2.apps.tobiasgrundtvig.dk/week-03/github-actions-triggers/) | 3:10 | You wrote a perfectly good workflow, pushed it, and nothing happened |
+| [Debugging a failing CI run — reading the logs](https://tek2.apps.tobiasgrundtvig.dk/week-03/debugging-ci-failures/) | 4:37 | A red X appears on your commit |
+
 ## Materials
 
 | Resource | Description | Time |

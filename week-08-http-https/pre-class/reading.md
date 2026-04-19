@@ -2,7 +2,19 @@
 
 **Estimated reading time: 45-60 minutes**
 
+> **Video library for this week** — each is self-contained, pick what you need:
+>
+> 1. 🎬 [HTTP is just text](https://tek2.apps.tobiasgrundtvig.dk/week-08/http-is-just-text/) (2:34) — HTTP looks magical until you see what it really is: plain text
+> 2. 🎬 [The anatomy of a URL](https://tek2.apps.tobiasgrundtvig.dk/week-08/url-anatomy/) (2:38) — Every URL has a scheme, a host, optionally a port, a path, and optionally a query string
+> 3. 🎬 [HTTP methods and CRUD — GET, POST, PUT, DELETE](https://tek2.apps.tobiasgrundtvig.dk/week-08/http-methods-and-crud/) (2:24) — Four methods cover most of what you'll ever need
+> 4. 🎬 [HTTP status codes — the five families](https://tek2.apps.tobiasgrundtvig.dk/week-08/http-status-codes/) (2:41) — Three digits on every HTTP response, grouped into five families
+> 5. 🎬 [curl in ten minutes — speaking HTTP from the terminal](https://tek2.apps.tobiasgrundtvig.dk/week-08/curl-essentials/) (2:15) — curl is the universal HTTP client
+> 6. 🎬 [HTTP vs HTTPS in Wireshark — the security demo](https://tek2.apps.tobiasgrundtvig.dk/week-08/http-vs-https-wireshark/) (2:20) — The single most convincing argument for HTTPS
+> 7. 🎬 [HTTP headers and cookies — the metadata layer](https://tek2.apps.tobiasgrundtvig.dk/week-08/http-headers-and-cookies/) (2:54) — Headers are how clients and servers share metadata
+> 8. 🎬 [Browser dev tools — the network tab tour](https://tek2.apps.tobiasgrundtvig.dk/week-08/devtools-network-tab/) (2:14) — Press F12
+>
 ---
+
 
 ## What's Inside Those TCP Packets?
 
