@@ -1,7 +1,11 @@
 # Eksamen i Teknologi 2
-Version: 20. April 2026
+
+Version: 1.0
+
+Eksamens datoer: 2. og 3. Juni.
 
 ## Disclaimer
+
 Dette er første udkast til eksamensspørgmål og der KAN evt. forekomme mindre justeringer.
 
 ## Emner i Teknologi 2
