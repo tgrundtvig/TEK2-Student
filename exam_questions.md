@@ -2,7 +2,9 @@
 
 Version: 1.0
 
-Eksamens datoer: 2. og 3. Juni.
+## Eksamens datoer 
+DATA-GBG-F25B: 11. og 12. Juni.
+DATA-GBG-F25C: 2. og 3. Juni.
 
 ## Disclaimer
 
